@@ -341,3 +341,48 @@ class TanzaniaWard(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
 
+class TanzaniaForestReserve(Base):
+    """
+    Official Tanzania Forest Reserves & Nature Reserves (TFS / WDPA).
+    696 protected and gazetted forest reserves across Tanzania totaling ~9.57M hectares.
+    Indexed with spatial bounding boxes, centroids, and PostGIS Geometry for
+    fast spatial filtering, map rendering, and land cover / deforestation monitoring.
+    """
+    __tablename__ = "tanzania_forest_reserves"
+
+    id = Column(String(64), primary_key=True)  # e.g. "FR-555697525" or "FR-301361"
+    wdpa_id = Column(Integer, unique=True, index=True, nullable=True)
+    name = Column(String(200), index=True, nullable=False)
+    orig_name = Column(String(200), nullable=True)
+    designation = Column(String(100), index=True, nullable=False)  # Nature Forest Reserve, Forest Reserve, Sanctuary
+    designation_type = Column(String(50), default="National", nullable=True)
+    iucn_category = Column(String(50), index=True, nullable=True)  # II, IV, VI, Ib, Not Reported
+    status = Column(String(50), default="Designated", nullable=True)
+    status_year = Column(Integer, nullable=True)
+    governance_type = Column(String(150), nullable=True)
+    management_authority = Column(String(150), nullable=True)  # Tanzania Forest Services (TFS) Agency
+    sub_location = Column(String(50), nullable=True)  # Region code / SUB_LOC
+    gis_area_km2 = Column(Float, nullable=False)
+    area_ha = Column(Float, index=True, nullable=False)  # GIS_AREA * 100.0
+
+    # Spatial indices for fast map pruning and point-in-polygon
+    centroid_lat = Column(Float, index=True, nullable=False)
+    centroid_lon = Column(Float, index=True, nullable=False)
+    bbox_min_lon = Column(Float, index=True, nullable=False)
+    bbox_min_lat = Column(Float, index=True, nullable=False)
+    bbox_max_lon = Column(Float, index=True, nullable=False)
+    bbox_max_lat = Column(Float, index=True, nullable=False)
+
+    # Full GeoJSON geometry for vector rendering and satellite polygon reduction
+    geojson_geometry = Column(JSON, nullable=False)
+
+    from app.database import db_url, engine
+    if "sqlite" in db_url or "sqlite" in str(engine.url):
+        geom = Column(Text, nullable=True)
+    else:
+        geom = Column(Geometry("GEOMETRY", srid=4326), nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+

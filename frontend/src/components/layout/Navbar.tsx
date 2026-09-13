@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Sprout, Droplets, Satellite, Upload, HardDriveDownload, 
-  Wallet, ShieldCheck, Wifi, WifiOff, Sparkles, FlaskConical, Zap, BookOpen 
+  Wallet, ShieldCheck, Wifi, WifiOff, Sparkles, FlaskConical, Zap, BookOpen, Trees 
 } from 'lucide-react';
 import { Parcel } from '../../types';
 
@@ -10,6 +10,7 @@ interface NavbarProps {
   selectedParcel: Parcel | null;
   onSelectParcel: (p: Parcel) => void;
   onOpenUpload: () => void;
+  onOpenForestReserves: () => void;
   onOpenPricing: () => void;
   onOpenAdmin: () => void;
   onOpenSync: () => void;
@@ -25,6 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   selectedParcel,
   onSelectParcel,
   onOpenUpload,
+  onOpenForestReserves,
   onOpenPricing,
   onOpenAdmin,
   onOpenSync,
@@ -119,6 +121,17 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Upload className="w-3.5 h-3.5 text-emerald-400" />
           <span className="hidden md:inline">Import Boundary</span>
+        </button>
+
+        {/* Tanzania Forest Reserves Button */}
+        <button
+          onClick={onOpenForestReserves}
+          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-300 border border-emerald-600/50 shadow-sm shadow-emerald-950/40 transition"
+          title="Tanzania Forest Reserves: 696 TFS PostGIS gazetted forest reserves for land cover monitoring"
+        >
+          <Trees className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="hidden md:inline">Forest Reserves</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-900 text-emerald-200 font-normal">696 TFS</span>
         </button>
 
         {/* PWA Sync Field Pack */}

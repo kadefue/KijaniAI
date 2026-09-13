@@ -14,6 +14,7 @@ import { LandCoverView } from './components/modules/LandCoverView';
 import { DropzoneModal } from './components/common/DropzoneModal';
 import { WalletModal } from './components/common/WalletModal';
 import { UserManualModal } from './components/common/UserManualModal';
+import { ForestReservesModal } from './components/common/ForestReservesModal';
 import { KijaniSyncModal } from './components/field/KijaniSyncModal';
 import { GemmaCopilotDrawer } from './components/copilot/GemmaCopilotDrawer';
 import { AdminModal } from './components/admin/AdminModal';
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
 
   // Modals
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
+  const [isForestReservesOpen, setIsForestReservesOpen] = useState<boolean>(false);
   const [isPricingOpen, setIsPricingOpen] = useState<boolean>(false);
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [isSyncOpen, setIsSyncOpen] = useState<boolean>(false);
@@ -126,6 +128,7 @@ export const App: React.FC = () => {
           trackAction('parcel_switched', { parcel_id: p.id });
         }}
         onOpenUpload={() => setIsUploadOpen(true)}
+        onOpenForestReserves={() => setIsForestReservesOpen(true)}
         onOpenPricing={() => {
           setIsPricingOpen(true);
           trackAction('tier_checkout_opened');
@@ -159,6 +162,7 @@ export const App: React.FC = () => {
               parcel={selectedParcel}
               crownGeojson={crownGeojson}
               activeLayer={getActiveLayerForTab(activeTab)}
+              onOpenForestReserves={() => setIsForestReservesOpen(true)}
             />
           </div>
 
@@ -240,6 +244,17 @@ export const App: React.FC = () => {
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenSync={() => setIsSyncOpen(true)}
         onToggleCopilot={() => setIsCopilotOpen(true)}
+      />
+
+      {/* Tanzania Forest Reserves PostGIS & Land Cover Monitoring Modal */}
+      <ForestReservesModal
+        isOpen={isForestReservesOpen}
+        onClose={() => setIsForestReservesOpen(false)}
+        onReserveImported={(p) => {
+          handleParcelCreated(p);
+          setActiveTab('map');
+          setIsForestReservesOpen(false);
+        }}
       />
 
       {/* Gemma 4 Copilot Drawer */}

@@ -218,5 +218,51 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  // Official Tanzania Forest Reserves (TFS PostGIS Network)
+  getForestReserves: (params?: {
+    search?: string;
+    designation?: string;
+    iucn?: string;
+    min_ha?: number;
+    max_ha?: number;
+    limit?: number;
+    skip?: number;
+  }) => {
+    const q = new URLSearchParams();
+    if (params?.search) q.set('search', params.search);
+    if (params?.designation) q.set('designation', params.designation);
+    if (params?.iucn) q.set('iucn', params.iucn);
+    if (params?.min_ha !== undefined) q.set('min_ha', String(params.min_ha));
+    if (params?.max_ha !== undefined) q.set('max_ha', String(params.max_ha));
+    if (params?.limit !== undefined) q.set('limit', String(params.limit));
+    if (params?.skip !== undefined) q.set('skip', String(params.skip));
+    const qs = q.toString();
+    return fetchJson<{
+      total: number;
+      skip: number;
+      limit: number;
+      reserves: any[];
+    }>(`/forest-reserves${qs ? `?${qs}` : ''}`);
+  },
+  getForestReservesCatalog: () => fetchJson<any>('/forest-reserves/catalog'),
+  getForestReservesGeoJson: (designation?: string, limit: number = 250) => {
+    const q = new URLSearchParams();
+    if (designation) q.set('designation', designation);
+    if (limit) q.set('limit', String(limit));
+    return fetchJson<any>(`/forest-reserves/geojson?${q.toString()}`);
+  },
+  getForestReserveDetails: (id: string) => fetchJson<any>(`/forest-reserves/${id}`),
+  importForestReserveToMonitoring: (id: string) =>
+    fetchJson<any>(`/forest-reserves/${id}/import-to-monitoring`, {
+      method: 'POST',
+    }),
+  getForestReserveLandCover: (id: string) =>
+    fetchJson<any>(`/forest-reserves/${id}/land-cover`),
+  ingestForestReserves: () =>
+    fetchJson<any>('/forest-reserves/ingest', {
+      method: 'POST',
+    }),
 };
+
 

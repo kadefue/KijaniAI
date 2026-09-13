@@ -73,7 +73,9 @@ class KijaniMajiEngine:
                 "mean_ph": 7.0,
                 "mean_ec_ms_cm": 0.0,
                 "clogging_risk_level": "NONE",
-                "standards": cls._get_standards_dict(0.0, 0.0, 7.0, 0.0)
+                "standards": cls._get_standards_dict(0.0, 0.0, 7.0, 0.0),
+                "system_mode": system_mode.upper(),
+                "operational_status": "LIVE_CALIBRATION_MODEL" if system_mode.upper() == "PRODUCTION" else "SIMULATED_DEMO_DATA"
             }
 
         # Use simulated or observed spectral index values

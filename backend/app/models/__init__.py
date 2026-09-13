@@ -13,7 +13,9 @@ from app.models.all_models import (
     GroundTruthObservation,
     UserSession,
     RetentionCampaign,
-    SatelliteApiConfig
+    SatelliteApiConfig,
+    TanzaniaWard,
+    TanzaniaForestReserve
 )
 
 __all__ = [
@@ -31,5 +33,7 @@ __all__ = [
     "GroundTruthObservation",
     "UserSession",
     "RetentionCampaign",
-    "SatelliteApiConfig"
+    "SatelliteApiConfig",
+    "TanzaniaWard",
+    "TanzaniaForestReserve"
 ]

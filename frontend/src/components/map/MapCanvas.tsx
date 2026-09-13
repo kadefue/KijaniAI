@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
-import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders } from 'lucide-react';
+import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders, Trees } from 'lucide-react';
 import { Parcel } from '../../types';
 
 interface MapCanvasProps {
   parcel: Parcel | null;
   crownGeojson?: any;
   activeLayer?: string;
+  onOpenForestReserves?: () => void;
 }
 
 export type BaseMapType = 'satellite' | 'osm_standard' | 'hybrid' | 'opentopo';
@@ -65,6 +66,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   parcel,
   crownGeojson,
   activeLayer = 'rgb',
+  onOpenForestReserves,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -76,6 +78,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const [overlayOpacity, setOverlayOpacity] = useState<number>(0.70);
   const [showOpacityControl, setShowOpacityControl] = useState<boolean>(false);
   const [isSplitScreen, setIsSplitScreen] = useState<boolean>(false);
+  const [showForestReserves, setShowForestReserves] = useState<boolean>(true);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -309,6 +312,120 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     }
   }, [crownGeojson]);
 
+  // Fetch and render official Tanzania Forest Reserves GeoJSON layer
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const setupForestReserves = async () => {
+      if (!map.isStyleLoaded()) {
+        map.once('load', setupForestReserves);
+        return;
+      }
+
+      if (!map.getSource('forest_reserves_source')) {
+        try {
+          const res = await fetch('/api/forest-reserves/geojson?limit=250');
+          if (!res.ok) return;
+          const data = await res.json();
+
+          if (!map.getSource('forest_reserves_source')) {
+            map.addSource('forest_reserves_source', {
+              type: 'geojson',
+              data: data,
+            });
+
+            // Insert underneath parcel boundaries but above basemap
+            const beforeLayer = map.getLayer('parcel_fill')
+              ? 'parcel_fill'
+              : (map.getLayer('kijani-analytic-layer') ? 'kijani-analytic-layer' : undefined);
+
+            map.addLayer({
+              id: 'forest_reserves_fill',
+              type: 'fill',
+              source: 'forest_reserves_source',
+              layout: {
+                visibility: showForestReserves ? 'visible' : 'none',
+              },
+              paint: {
+                'fill-color': [
+                  'case',
+                  ['in', 'Nature', ['get', 'designation']],
+                  '#059669', // Nature Forest Reserve (Emerald)
+                  '#0d9488', // Forest Reserve (Teal)
+                ],
+                'fill-opacity': 0.28,
+              },
+            }, beforeLayer);
+
+            map.addLayer({
+              id: 'forest_reserves_outline',
+              type: 'line',
+              source: 'forest_reserves_source',
+              layout: {
+                visibility: showForestReserves ? 'visible' : 'none',
+              },
+              paint: {
+                'line-color': '#10b981',
+                'line-width': 1.6,
+                'line-dasharray': [3, 1],
+              },
+            }, beforeLayer);
+
+            // Click Popup for Forest Reserve Info
+            map.on('click', 'forest_reserves_fill', (e) => {
+              const feature = e.features?.[0];
+              if (!feature) return;
+              const p = feature.properties as any;
+              const area = p?.area_ha ? Number(p.area_ha).toLocaleString(undefined, { maximumFractionDigits: 1 }) : 'N/A';
+              const km2 = p?.area_ha ? (Number(p.area_ha) / 100).toFixed(1) : 'N/A';
+
+              new maplibregl.Popup({ className: 'kijani-popup', closeButton: true, maxWidth: '280px' })
+                .setLngLat(e.lngLat)
+                .setHTML(`
+                  <div style="font-family: system-ui, -apple-system, sans-serif; color: #0f172a; padding: 6px 4px;">
+                    <div style="font-size: 13px; font-weight: 800; color: #047857; margin-bottom: 2px;">
+                      🌲 ${p?.name || 'Forest Reserve'}
+                    </div>
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #065f46; letter-spacing: 0.5px;">
+                      ${p?.designation || 'Gazetted Reserve'}
+                    </div>
+                    <div style="margin-top: 6px; font-size: 11px; color: #334155; line-height: 1.4;">
+                      <div><strong>Protected Area:</strong> ${area} ha (${km2} km²)</div>
+                      <div><strong>Authority:</strong> ${p?.management_authority || 'TFS Agency'}</div>
+                      <div><strong>IUCN:</strong> ${p?.iucn_category || 'Protected Area'}</div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 10px; color: #059669; font-weight: 700; background: #ecfdf5; padding: 4px 8px; border-radius: 6px; border: 1px solid #a7f3d0; text-align: center;">
+                      Tanzania Forest Services (TFS) Network
+                    </div>
+                  </div>
+                `)
+                .addTo(map);
+            });
+
+            map.on('mouseenter', 'forest_reserves_fill', () => {
+              map.getCanvas().style.cursor = 'pointer';
+            });
+            map.on('mouseleave', 'forest_reserves_fill', () => {
+              map.getCanvas().style.cursor = '';
+            });
+          }
+        } catch (err) {
+          console.error('Failed to load forest reserves geojson', err);
+        }
+      } else {
+        if (map.getLayer('forest_reserves_fill')) {
+          map.setLayoutProperty('forest_reserves_fill', 'visibility', showForestReserves ? 'visible' : 'none');
+        }
+        if (map.getLayer('forest_reserves_outline')) {
+          map.setLayoutProperty('forest_reserves_outline', 'visibility', showForestReserves ? 'visible' : 'none');
+        }
+      }
+    };
+
+    setupForestReserves();
+  }, [showForestReserves]);
+
   const updateParcelGeometry = (map: maplibregl.Map, geom: any) => {
     if (!map.isStyleLoaded()) return;
 
@@ -426,6 +543,37 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
             <Split className="w-3.5 h-3.5" />
             <span>{isSplitScreen ? 'Split Active' : 'Split'}</span>
           </button>
+
+          <div className="h-4 w-px bg-slate-700 mx-1 hidden sm:block" />
+
+          {/* Tanzania Forest Reserves Layer Toggle */}
+          <button
+            onClick={() => setShowForestReserves(!showForestReserves)}
+            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition ${
+              showForestReserves
+                ? 'bg-emerald-700 text-white shadow-md ring-1 ring-emerald-400/40'
+                : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+            }`}
+            title="Toggle Tanzania Forest Reserves (696 Gazetted PostGIS Reserves)"
+          >
+            <Trees className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Reserves (TFS)</span>
+            <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${
+              showForestReserves ? 'bg-emerald-900 text-emerald-100' : 'bg-slate-900 text-slate-500'
+            }`}>
+              696
+            </span>
+          </button>
+
+          {onOpenForestReserves && (
+            <button
+              onClick={onOpenForestReserves}
+              className="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 transition hidden xl:inline-flex items-center gap-1"
+              title="Open full Tanzania Forest Reserves Land Cover & Monitoring Catalog"
+            >
+              <span>Catalog &rarr;</span>
+            </button>
+          )}
         </div>
 
         {/* Optional Opacity Slider Popover */}

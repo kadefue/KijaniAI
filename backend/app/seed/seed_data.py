@@ -250,8 +250,13 @@ def seed_database():
         tanzania_res = TanzaniaBoundaryService.seed_database_and_folder(db)
         print(f"Official Tanzania ward shapefiles persisted: {tanzania_res}")
 
+        # 6. Seed official Tanzania Forest Reserves into PostGIS database
+        from app.services.forest_reserves_service import ForestReservesService
+        forest_res = ForestReservesService.ingest_geojson_to_db(db)
+        print(f"Official Tanzania Forest Reserves persisted: {forest_res}")
+
         db.commit()
-        print("Database successfully seeded with Tanzanian parcels, pricing tiers, and ward shapefiles.")
+        print("Database successfully seeded with Tanzanian parcels, pricing tiers, ward shapefiles, and forest reserves.")
     except Exception as e:
         db.rollback()
         print(f"Error seeding database: {e}")
