@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Droplets, Waves, Trees, Leaf, Radio, Award, AlertTriangle, 
-  RotateCcw, Map, Smartphone 
+  RotateCcw, Map, Smartphone, History 
 } from 'lucide-react';
 
 export type ModuleTab = 
@@ -14,6 +14,7 @@ export type ModuleTab =
   | 'watch' 
   | 'restore' 
   | 'map' 
+  | 'mabadiliko'
   | 'sync';
 
 interface SidebarProps {
@@ -93,6 +94,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, parcel
       label: '5-Class Fused LULC',
       icon: Map,
       color: 'text-purple-400'
+    },
+    {
+      id: 'mabadiliko',
+      name: 'MabadilikoAI',
+      label: 'Decadal Change Dynamics',
+      icon: History,
+      color: 'text-violet-400',
+      badge: '1-10 Yrs'
     },
     {
       id: 'sync',

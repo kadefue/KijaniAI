@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 from app.routers import (
-    auth, parcels, imagery, modules, mrv, sync, copilot, telemetry, tiles, admin, forest_reserves
+    auth, parcels, imagery, modules, mrv, sync, copilot, telemetry, tiles, admin, forest_reserves, mabadiliko
 )
 
 # Initialize database schema
@@ -38,6 +38,7 @@ app.include_router(telemetry.router, prefix=settings.API_V1_STR)
 app.include_router(tiles.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
 app.include_router(forest_reserves.router, prefix=settings.API_V1_STR)
+app.include_router(mabadiliko.router, prefix=settings.API_V1_STR)
 
 @app.on_event("startup")
 def on_startup():

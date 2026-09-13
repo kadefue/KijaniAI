@@ -33,12 +33,19 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "gemma4")
     
-    # SMTP / Email
-    SMTP_HOST: str = os.getenv("SMTP_HOST", "localhost")
-    SMTP_PORT: int = int(os.getenv("SMTP_PORT", 1025))
-    SMTP_USER: str = os.getenv("SMTP_USER", "")
+    # SMTP / Email Notifications (Gmail Relay via suanet.ac.tz)
+    SMTP_PROTOCOL: str = os.getenv("SMTP_PROTOCOL", "smtp")
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp-relay.gmail.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: str = os.getenv("SMTP_USER", "noreply@suanet.ac.tz")
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    EMAILS_FROM_EMAIL: str = "alerts@kijani.ai"
+    SMTP_CRYPTO: str = os.getenv("SMTP_CRYPTO", "tls")           # tls | ssl | none
+    SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "noreply@suanet.ac.tz")
+    SMTP_FROM_NAME: str = os.getenv("SMTP_FROM_NAME", "KijaniAI Platform")
+    SMTP_MAILTYPE: str = os.getenv("SMTP_MAILTYPE", "html")
+    SMTP_CHARSET: str = os.getenv("SMTP_CHARSET", "utf8")
+    EMAILS_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "noreply@suanet.ac.tz")  # legacy compat alias
+
     
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = ["*"]

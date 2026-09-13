@@ -11,6 +11,7 @@ import { CarbonMrvView } from './components/modules/CarbonMrvView';
 import { WatchView } from './components/modules/WatchView';
 import { RestoreView } from './components/modules/RestoreView';
 import { LandCoverView } from './components/modules/LandCoverView';
+import { MabadilikoView } from './components/modules/MabadilikoView';
 import { DropzoneModal } from './components/common/DropzoneModal';
 import { WalletModal } from './components/common/WalletModal';
 import { UserManualModal } from './components/common/UserManualModal';
@@ -112,6 +113,8 @@ export const App: React.FC = () => {
         return 'ndvi';
       case 'radar':
         return 'sar';
+      case 'mabadiliko':
+        return 'rgb';
       default:
         return 'rgb';
     }
@@ -185,6 +188,7 @@ export const App: React.FC = () => {
                 {activeTab === 'watch' && <WatchView parcel={selectedParcel} />}
                 {activeTab === 'restore' && <RestoreView parcel={selectedParcel} />}
                 {activeTab === 'map' && <LandCoverView parcel={selectedParcel} />}
+                {activeTab === 'mabadiliko' && <MabadilikoView parcel={selectedParcel} />}
                 {activeTab === 'sync' && (
                   <div className="p-8 text-center space-y-4">
                     <h3 className="text-base font-bold text-white">KijaniSync Offline PWA Engine</h3>

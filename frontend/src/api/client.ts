@@ -263,6 +263,90 @@ export const api = {
     fetchJson<any>('/forest-reserves/ingest', {
       method: 'POST',
     }),
+
+  // MabadilikoAI: Multi-Temporal Land Cover Change Dynamics & AI Explanations
+  getMabadilikoSupportedIntervals: () => fetchJson<any>('/modules/mabadiliko/supported-intervals'),
+  getMabadilikoParcelChanges: (
+    parcelId: string,
+    params?: {
+      years?: number;
+      interval?: string;
+      start_year?: number;
+      end_year?: number;
+    }
+  ) => {
+    const q = new URLSearchParams();
+    if (params?.years) q.set('years', String(params.years));
+    if (params?.interval) q.set('interval', params.interval);
+    if (params?.start_year) q.set('start_year', String(params.start_year));
+    if (params?.end_year) q.set('end_year', String(params.end_year));
+    const qs = q.toString();
+    return fetchJson<any>(`/modules/mabadiliko/${parcelId}/changes${qs ? `?${qs}` : ''}`);
+  },
+  analyzeBoundaryMabadiliko: (payload: {
+    name?: string;
+    category?: string;
+    ecozone?: string;
+    area_ha?: number;
+    geojson_geometry: any;
+    years?: number;
+    interval?: string;
+    start_year?: number;
+    end_year?: number;
+  }) =>
+    fetchJson<any>('/modules/mabadiliko/analyze-boundary', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  getMabadilikoBasinsSummary: (years: number = 10, interval: string = 'annually') =>
+    fetchJson<any>(`/modules/mabadiliko/tanzania-basins-summary?years=${years}&interval=${interval}`),
+
+  // ── Async Long-Running MabadilikoAI Jobs (Submit → Poll → Result + Email) ──
+  submitMabadilikoJob: (payload: {
+    boundary_name?: string;
+    boundary_type?: string;
+    parcel_id?: string;
+    geojson_geometry: any;
+    area_ha?: number;
+    category?: string;
+    ecozone?: string;
+    years?: number;
+    interval?: string;
+    start_year?: number;
+    end_year?: number;
+    notify_email?: string;
+  }) =>
+    fetchJson<{
+      message: string;
+      job_id: string;
+      status: string;
+      notify_email: string | null;
+      poll_url: string;
+    }>('/modules/mabadiliko/jobs/submit', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getMabadilikoJobStatus: (jobId: string) =>
+    fetchJson<{
+      job_id: string;
+      status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+      progress_pct: number;
+      progress_message: string;
+      error_message: string | null;
+      notify_email: string | null;
+      completed_at: string | null;
+      result_payload: any | null;
+    }>(`/modules/mabadiliko/jobs/${jobId}/status`),
+
+  getMabadilikoJobResult: (jobId: string) =>
+    fetchJson<any>(`/modules/mabadiliko/jobs/${jobId}/result`),
+
+  registerMabadilikoEmailNotification: (jobId: string, email: string) =>
+    fetchJson<any>(`/modules/mabadiliko/jobs/${jobId}/notify?notify_email=${encodeURIComponent(email)}`, {
+      method: 'PATCH',
+    }),
+
 };
 
 

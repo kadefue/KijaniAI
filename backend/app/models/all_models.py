@@ -384,5 +384,47 @@ class TanzaniaForestReserve(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+class MabadilikoJob(Base):
+    """
+    Tracks asynchronous MabadilikoAI land cover change-detection jobs.
+    Each job runs as a Celery background task that downloads multi-temporal
+    satellite imagery, computes LULC transitions, and sends an email notification
+    to the requesting user upon completion.
 
+    Lifecycle: PENDING → PROCESSING → COMPLETED | FAILED
+    """
+    __tablename__ = "mabadiliko_jobs"
 
+    id = Column(String(64), primary_key=True, default=lambda: str(__import__("uuid").uuid4()))
+    celery_task_id = Column(String(128), index=True, nullable=True)
+
+    # Job input parameters (persisted so users can re-run or share job links)
+    boundary_name = Column(String(300), nullable=True)
+    boundary_type = Column(String(50), nullable=True)   # parcel | ward | district | region | forest_reserve | custom
+    parcel_id = Column(String(64), nullable=True, index=True)
+    geojson_geometry = Column(JSON, nullable=False)
+    area_ha = Column(Float, nullable=True)
+    category = Column(String(100), nullable=True)
+    ecozone = Column(String(100), nullable=True)
+    years = Column(Integer, nullable=False, default=10)
+    interval = Column(String(30), nullable=False, default="monthly")
+    start_year = Column(Integer, nullable=True)
+    end_year = Column(Integer, nullable=True)
+
+    # Job lifecycle
+    status = Column(String(30), nullable=False, default="PENDING", index=True)
+    # PENDING | PROCESSING | COMPLETED | FAILED
+    progress_pct = Column(Float, nullable=True, default=0.0)
+    progress_message = Column(String(500), nullable=True)
+    error_message = Column(Text, nullable=True)
+
+    # Result (stored as JSON blob to avoid a separate results table)
+    result_payload = Column(JSON, nullable=True)
+
+    # Email notification
+    notify_email = Column(String(255), nullable=True, index=True)
+    email_sent_at = Column(DateTime, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    completed_at = Column(DateTime, nullable=True)

@@ -1,17 +1,20 @@
 import time
+import uuid
 import httpx
 from datetime import datetime
 from app.worker.celery_app import celery_app
 from app.database import SessionLocal
 from app.models.all_models import (
     ImageryOrder, Parcel, TreeCount, EcosystemMetrics,
-    WaterQualityMetrics, MRVCertificate, UserSession, RetentionCampaign, User
+    WaterQualityMetrics, MRVCertificate, UserSession, RetentionCampaign, User,
+    MabadilikoJob
 )
 from app.modules.count.engine import KijaniCountEngine
 from app.modules.health.engine import KijaniHealthEngine
 from app.modules.water.engine import KijaniMajiEngine
 from app.modules.carbon.engine import KijaniCarbonEngine
 from app.modules.carbon.mrv_generator import MRVGenerator
+from app.modules.mabadiliko.engine import MabadilikoEngine
 from app.config import settings
 
 @celery_app.task(name="app.worker.tasks.process_imagery_order_task")
@@ -196,5 +199,131 @@ def retention_winback_evaluation_task():
     except Exception as e:
         db.rollback()
         return {"status": "error", "error": str(e)}
+    finally:
+        db.close()
+
+
+# ==============================================================================
+# MabadilikoAI: Async Land Cover Change Detection Task
+# ==============================================================================
+
+@celery_app.task(
+    name="app.worker.tasks.run_mabadiliko_analysis_task",
+    bind=True,
+    max_retries=2,
+    soft_time_limit=600,
+    time_limit=720
+)
+def run_mabadiliko_analysis_task(self, job_id: str):
+    """
+    Asynchronously runs a full MabadilikoAI multi-temporal land cover change
+    analysis for the given job_id.
+
+    Steps:
+      1. Load job parameters from DB.
+      2. Update status → PROCESSING.
+      3. Run MabadilikoEngine.evaluate_changes() with all parameters.
+      4. Persist result_payload to the MabadilikoJob row.
+      5. Mark COMPLETED and send email notification if requested.
+      6. On any failure: mark FAILED, persist error_message.
+    """
+    db = SessionLocal()
+    job = None
+    try:
+        job = db.query(MabadilikoJob).filter(MabadilikoJob.id == job_id).first()
+        if not job:
+            return {"status": "error", "message": f"MabadilikoJob {job_id} not found"}
+
+        # ── Step 1: Mark as processing
+        job.status = "PROCESSING"
+        job.progress_pct = 5.0
+        job.progress_message = "Initialising multi-temporal satellite data pipeline..."
+        db.commit()
+
+        # ── Step 2: Determine system mode
+        from app.models.all_models import SystemSetting
+        setting = db.query(SystemSetting).filter(SystemSetting.key == "system_mode").first()
+        system_mode = (setting.value.upper() if setting and setting.value else
+                       getattr(settings, "SYSTEM_MODE", "TESTING").upper())
+
+        # ── Step 3: Update progress — fetching imagery metadata
+        job.progress_pct = 20.0
+        job.progress_message = f"Fetching imagery metadata for {job.years}-year window ({job.interval} intervals)..."
+        db.commit()
+
+        # ── Step 4: Run the engine
+        results = MabadilikoEngine.evaluate_changes(
+            area_ha=job.area_ha or 100.0,
+            category=job.category or "forest",
+            ecozone=job.ecozone or "MIOMBO",
+            years=job.years,
+            interval=job.interval,
+            start_year=job.start_year,
+            end_year=job.end_year,
+            system_mode=system_mode,
+            geojson_geometry=job.geojson_geometry
+        )
+
+        # ── Step 5: Update progress — analysing transitions
+        job.progress_pct = 75.0
+        job.progress_message = "Computing land cover transition matrices and AI explanations..."
+        db.commit()
+
+        # Brief simulated processing delay in TESTING mode so UI can show progress
+        if system_mode == "TESTING":
+            import time as _time
+            _time.sleep(2)
+
+        # ── Step 6: Persist results
+        job.result_payload = results
+        job.status = "COMPLETED"
+        job.progress_pct = 100.0
+        job.progress_message = "Analysis complete"
+        job.completed_at = datetime.utcnow()
+        db.commit()
+
+        # ── Step 7: Email notification
+        if job.notify_email:
+            try:
+                from app.services.email_service import send_mabadiliko_completion_email
+                ai = results.get("ai_explanation", {})
+                send_mabadiliko_completion_email(
+                    to_email=job.notify_email,
+                    job_id=job_id,
+                    boundary_name=job.boundary_name or "Custom Boundary",
+                    years=job.years,
+                    interval=job.interval,
+                    net_changes=results.get("net_changes", {}),
+                    ai_summary_en=ai.get("en", {}).get("summary", ""),
+                    ai_summary_sw=ai.get("sw", {}).get("summary", ""),
+                    dashboard_url=f"https://kijani.ai/mabadiliko/{job_id}"
+                )
+                job.email_sent_at = datetime.utcnow()
+                db.commit()
+            except Exception as email_err:
+                # Email failure should not fail the job itself
+                import logging
+                logging.getLogger("kijani.worker").warning(
+                    f"[MabadilikoTask] Email notification failed for job {job_id}: {email_err}"
+                )
+
+        return {
+            "status": "success",
+            "job_id": job_id,
+            "steps": results.get("total_steps", 0),
+            "notify_email": job.notify_email
+        }
+
+    except Exception as exc:
+        db.rollback()
+        if job:
+            job.status = "FAILED"
+            job.error_message = str(exc)[:1000]
+            job.progress_message = "Analysis failed. Please try again."
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+        return {"status": "error", "job_id": job_id, "error": str(exc)}
     finally:
         db.close()
