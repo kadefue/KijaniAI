@@ -1,0 +1,166 @@
+# ==============================================================================
+# KijaniAI Geospatial & Intelligence Platform .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Secrets & API Credentials
+# ------------------------------------------------------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+*.crt
+service_account*.json
+gcp_key*.json
+google-credentials*.json
+*secret*.json
+
+# ------------------------------------------------------------------------------
+# 2. Python Bytecode, Caches & Packaging
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ------------------------------------------------------------------------------
+# 3. Python Virtual Environments & uv/pip Caches
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+.uv/
+.cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ------------------------------------------------------------------------------
+# 4. Deep Learning, PyTorch Weights & Model Checkpoints
+# ------------------------------------------------------------------------------
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+*.ckpt
+checkpoints/
+lightning_logs/
+wandb/
+.tensorboard/
+
+# ------------------------------------------------------------------------------
+# 5. Node.js & Frontend Build Outputs
+# ------------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+frontend/dist/
+frontend/dist-ssr/
+frontend/node_modules/
+dist/
+dist-ssr/
+.eslintcache
+*.tsbuildinfo
+
+# ------------------------------------------------------------------------------
+# 6. Geospatial Rasters, Massive Imagery Archives & Tiles
+# ------------------------------------------------------------------------------
+*.tif
+*.tiff
+*.geotiff
+*.jp2
+*.h5
+*.hdf
+*.nc
+*.img
+*.vrt
+*.tar.gz
+*.tgz
+*.zip
+!backend/data/shapefiles/tanzania_2022_wards/*.geojson
+!backend/data/shapefiles/tanzania_2022_wards/*.json
+!backend/data/shapefiles/tanzania_2022_wards/README.md
+backend/data/cache/
+backend/data/temp/
+tiles_cache/
+scratch/
+
+# ------------------------------------------------------------------------------
+# 7. Local Databases, Docker Volumes & Storage Dumps
+# ------------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.sql.gz
+*.dump
+postgres_data/
+redis_data/
+minio_data/
+
+# ------------------------------------------------------------------------------
+# 8. Celery & Redis Task Engine
+# ------------------------------------------------------------------------------
+celerybeat-schedule
+celerybeat-schedule.db
+celerybeat.pid
+dump.rdb
+
+# ------------------------------------------------------------------------------
+# 9. Testing, Linting & Coverage Reports
+# ------------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+nosetests.xml
+
+# ------------------------------------------------------------------------------
+# 10. Operating System & IDE Artifacts
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
