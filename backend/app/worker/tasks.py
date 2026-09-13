@@ -94,6 +94,26 @@ def process_imagery_order_task(order_id: str):
         order.raster_storage_path = f"satellite-cogs/{order.id}_cog.tif"
         db.commit()
 
+        # Email notification
+        try:
+            user_email = parcel.user.email if parcel.user else None
+            if user_email:
+                from app.services.email_service import send_imagery_order_completion_email
+                send_imagery_order_completion_email(
+                    to_email=user_email,
+                    order_id=order.id,
+                    parcel_name=parcel.name,
+                    total_trees=count_res["total_trees"],
+                    tco2e=carbon_res["net_tco2e_tradable"],
+                    dashboard_url=f"https://kijani.ai/parcels/{parcel.id}"
+                )
+        except Exception as email_err:
+            # Email failure should not fail the order itself
+            import logging
+            logging.getLogger("kijani.worker").warning(
+                f"[ImageryOrderTask] Email notification failed for order {order.id}: {email_err}"
+            )
+
         return {"status": "success", "order_id": order.id, "trees": count_res["total_trees"]}
     except Exception as e:
         db.rollback()
@@ -143,6 +163,31 @@ def generate_mrv_pdf_task(parcel_id: str, total_trees: int, carbon_data: dict, s
         return {"status": "error", "error": str(e)}
     finally:
         db.close()
+
+@celery_app.task(name="app.worker.tasks.send_mrv_certificate_email_task")
+def send_mrv_certificate_email_task(
+    to_email: str,
+    parcel_name: str,
+    certificate_number: str,
+    tco2e: float,
+    verify_url: str
+):
+    """
+    Sends the 'MRV certificate ready' email notification in the background so
+    SMTP latency never delays the certificate-generation API response.
+    """
+    from app.services.email_service import send_mrv_certificate_email
+    try:
+        sent = send_mrv_certificate_email(
+            to_email=to_email,
+            parcel_name=parcel_name,
+            certificate_number=certificate_number,
+            tco2e=tco2e,
+            verify_url=verify_url
+        )
+        return {"status": "success" if sent else "failed", "certificate_number": certificate_number}
+    except Exception as e:
+        return {"status": "error", "certificate_number": certificate_number, "error": str(e)}
 
 @celery_app.task(name="app.worker.tasks.retention_winback_evaluation_task")
 def retention_winback_evaluation_task():

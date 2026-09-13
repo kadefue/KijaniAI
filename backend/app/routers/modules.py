@@ -434,6 +434,28 @@ def generate_mrv(parcel_id: str, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(cert)
 
+    # Notify the parcel owner by email in the background (does not block this response)
+    if parcel.user and parcel.user.email:
+        from app.worker.tasks import send_mrv_certificate_email_task
+        email_kwargs = dict(
+            to_email=parcel.user.email,
+            parcel_name=parcel.name,
+            certificate_number=cert.certificate_number,
+            tco2e=cert.tco2e_net_tradable,
+            verify_url=dossier["verification_url"]
+        )
+        try:
+            send_mrv_certificate_email_task.delay(**email_kwargs)
+        except Exception:
+            # Celery/Redis unavailable — send inline as a non-blocking best effort
+            import logging
+            try:
+                send_mrv_certificate_email_task(**email_kwargs)
+            except Exception as email_err:
+                logging.getLogger("kijani.mrv").warning(
+                    f"MRV certificate email failed for {cert.certificate_number}: {email_err}"
+                )
+
     return {
         "id": cert.id,
         "parcel_id": parcel.id,
