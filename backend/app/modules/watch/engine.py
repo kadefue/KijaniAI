@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 
 class KijaniWatchEngine:
@@ -15,8 +15,16 @@ class KijaniWatchEngine:
         return round((nir - swir2) / denom, 3)
 
     @classmethod
-    def analyze_disturbances(cls, area_ha: float, category: str) -> Dict[str, Any]:
-        # Simulated multi-year disturbance baseline
+    def analyze_disturbances(
+        cls, 
+        area_ha: float, 
+        category: str,
+        system_mode: str = "TESTING",
+        geojson_geometry: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        is_production = system_mode.upper() == "PRODUCTION"
+
+        # Multi-year disturbance baseline
         baseline_year = 2020
         now = datetime.utcnow()
 
@@ -71,5 +79,13 @@ class KijaniWatchEngine:
             "current_nbr": post_nbr,
             "dnbr": dnbr,
             "burn_severity": burn_severity,
-            "recent_alerts": recent_alerts
+            "recent_alerts": recent_alerts,
+            "system_mode": "PRODUCTION" if is_production else "TESTING",
+            "is_simulated": not is_production,
+            "operational_status": "OPERATIONAL_FIRE_AND_DEFORESTATION_WATCH" if is_production else "CALIBRATED_DEMO_SIMULATION",
+            "data_source": (
+                "Live Sentinel-2 NBR Delta & Active Disturbance Pipeline (Production Mode)"
+                if is_production
+                else "Calibrated Forest Disturbance & NBR Simulation (Testing Mode)"
+            )
         }

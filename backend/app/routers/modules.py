@@ -41,6 +41,16 @@ def _get_parcel_centroid(parcel: Parcel) -> tuple[float, float]:
         pass
     return -6.82, 37.66 # Default Morogoro agricultural basin
 
+def _get_system_mode(db: Session) -> str:
+    try:
+        from app.models.all_models import SystemSetting
+        s = db.query(SystemSetting).filter(SystemSetting.key == "system_mode").first()
+        if s and s.value:
+            return s.value.upper()
+    except Exception:
+        pass
+    return getattr(settings, "SYSTEM_MODE", "TESTING").upper()
+
 # ==================== KIJANI IRRIGATION ====================
 
 @router.get("/irrigation/{parcel_id}/status", response_model=IrrigationStatusOut)
@@ -50,7 +60,8 @@ async def get_irrigation_status(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    health = KijaniHealthEngine.get_health_profile(parcel.category, parcel.crop_type)
+    mode = _get_system_mode(db)
+    health = KijaniHealthEngine.get_health_profile(parcel.category, parcel.crop_type, system_mode=mode, geojson_geometry=parcel.geojson_geometry)
     soil = parcel.soil_profile
     fc_rate = (soil.field_capacity * 1000.0) if soil else None
     pwp_rate = (soil.wilting_point * 1000.0) if soil else None
@@ -70,7 +81,8 @@ async def get_irrigation_status(parcel_id: str, db: Session = Depends(get_db)):
         forecast_rainfall_72h_mm=forecast_72h_rain,
         fc_mm_m=fc_rate,
         pwp_mm_m=pwp_rate,
-        rooting_depth_m=root_depth
+        rooting_depth_m=root_depth,
+        system_mode=mode
     )
 
     return {
@@ -246,7 +258,13 @@ def get_water_quality(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    res = KijaniMajiEngine.evaluate_water_quality(parcel.category, parcel.area_ha)
+    mode = _get_system_mode(db)
+    res = KijaniMajiEngine.evaluate_water_quality(
+        parcel.category, 
+        parcel.area_ha,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )
     return {
         "parcel_id": parcel.id,
         "date": datetime.utcnow(),
@@ -293,11 +311,12 @@ def get_tree_count(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
+    mode = _get_system_mode(db)
     return KijaniCountEngine.detect_crowns(
         parcel.geojson_geometry, 
         parcel.area_ha, 
         parcel.ecozone,
-        system_mode=settings.SYSTEM_MODE
+        system_mode=mode
     )
 
 # ==================== KIJANI HEALTH ====================
@@ -308,7 +327,13 @@ def get_vegetation_health(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    return KijaniHealthEngine.get_health_profile(parcel.category, parcel.crop_type)
+    mode = _get_system_mode(db)
+    return KijaniHealthEngine.get_health_profile(
+        parcel.category, 
+        parcel.crop_type,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )
 
 # ==================== KIJANI RADAR ====================
 
@@ -318,7 +343,13 @@ def get_sar_radar(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    return KijaniRadarEngine.get_radar_profile(parcel.category, parcel.area_ha)
+    mode = _get_system_mode(db)
+    return KijaniRadarEngine.get_radar_profile(
+        parcel.category, 
+        parcel.area_ha,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )
 
 # ==================== KIJANI WATCH ====================
 
@@ -328,7 +359,13 @@ def get_watch_disturbances(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    return KijaniWatchEngine.analyze_disturbances(parcel.area_ha, parcel.category)
+    mode = _get_system_mode(db)
+    return KijaniWatchEngine.analyze_disturbances(
+        parcel.area_ha, 
+        parcel.category,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )
 
 # ==================== KIJANI CARBON & MRV ====================
 
@@ -338,12 +375,14 @@ def get_carbon_metrics(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone)
+    mode = _get_system_mode(db)
+    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone, system_mode=mode)
     carbon_res = KijaniCarbonEngine.calculate_stand_carbon(
         count_res["total_trees"],
         count_res["mean_crown_diameter_m"],
         parcel.area_ha,
-        parcel.ecozone
+        parcel.ecozone,
+        system_mode=mode
     )
     return {
         "parcel_id": parcel.id,
@@ -357,12 +396,14 @@ def generate_mrv(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone)
+    mode = _get_system_mode(db)
+    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone, system_mode=mode)
     carbon_res = KijaniCarbonEngine.calculate_stand_carbon(
         count_res["total_trees"],
         count_res["mean_crown_diameter_m"],
         parcel.area_ha,
-        parcel.ecozone
+        parcel.ecozone,
+        system_mode=mode
     )
 
     _, _, spatial_hash = GeometryParser._finalize_geometry(
@@ -414,6 +455,7 @@ def recalibrate_carbon(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
+    mode = _get_system_mode(db)
     # Fetch ground observations from surveys
     observations = []
     for survey in parcel.field_surveys:
@@ -432,12 +474,13 @@ def recalibrate_carbon(parcel_id: str, db: Session = Depends(get_db)):
             {"species_identified": "brachystegia", "measured_dbh_cm": 21.0, "measured_height_m": 9.8}
         ]
 
-    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone)
+    count_res = KijaniCountEngine.detect_crowns(parcel.geojson_geometry, parcel.area_ha, parcel.ecozone, system_mode=mode)
     carbon_res = KijaniCarbonEngine.calculate_stand_carbon(
         count_res["total_trees"],
         count_res["mean_crown_diameter_m"],
         parcel.area_ha,
-        parcel.ecozone
+        parcel.ecozone,
+        system_mode=mode
     )
 
     fusion_res = SensorFusionEngine.fuse_observations(
@@ -455,7 +498,13 @@ def get_restore_metrics(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    return KijaniRestoreEngine.get_restoration_metrics(parcel.area_ha, planting_year=2022)
+    mode = _get_system_mode(db)
+    return KijaniRestoreEngine.get_restoration_metrics(
+        parcel.area_ha, 
+        planting_year=2022,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )
 
 # ==================== KIJANI MAP ====================
 
@@ -465,4 +514,10 @@ def get_lulc_map(parcel_id: str, db: Session = Depends(get_db)):
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found")
 
-    return KijaniMapEngine.classify_parcel_lulc(parcel.category, parcel.area_ha)
+    mode = _get_system_mode(db)
+    return KijaniMapEngine.classify_parcel_lulc(
+        parcel.category, 
+        parcel.area_ha,
+        system_mode=mode,
+        geojson_geometry=parcel.geojson_geometry
+    )

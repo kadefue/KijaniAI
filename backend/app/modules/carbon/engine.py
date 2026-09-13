@@ -1,5 +1,5 @@
 import math
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 class KijaniCarbonEngine:
     """
@@ -65,7 +65,8 @@ class KijaniCarbonEngine:
         total_trees: int,
         mean_crown_diameter_m: float,
         area_ha: float,
-        ecozone: str = "MIOMBO"
+        ecozone: str = "MIOMBO",
+        system_mode: str = "TESTING"
     ) -> Dict[str, Any]:
         """
         Aggregates stand-level carbon metrics, applies Verra non-permanence risk buffer deductions,
@@ -90,6 +91,8 @@ class KijaniCarbonEngine:
         soc_baseline = cls.ECOZONE_SOC_BASELINE.get(ecozone.upper(), 45.0)
         total_soc_tonnes = round(soc_baseline * area_ha, 1)
 
+        is_production = system_mode.upper() == "PRODUCTION"
+
         return {
             "ecozone": ecozone,
             "area_ha": round(area_ha, 2),
@@ -104,5 +107,13 @@ class KijaniCarbonEngine:
             "net_tco2e_tradable": net_tradable_tco2e,
             "soc_baseline_t_per_ha": soc_baseline,
             "total_soc_tonnes": total_soc_tonnes,
-            "uncertainty_range_pct": 16.5
+            "uncertainty_range_pct": 16.5,
+            "system_mode": "PRODUCTION" if is_production else "TESTING",
+            "is_simulated": not is_production,
+            "operational_status": "VERRA_VM0042_ALLOMETRIC_AUDIT" if is_production else "CALIBRATED_DEMO_SIMULATION",
+            "data_source": (
+                "DeepForest Tree Crown Vector Segmentation & Allometrics (Production Mode)"
+                if is_production
+                else "Regional Allometric Ecozone Biomass Model (Testing Mode)"
+            )
         }

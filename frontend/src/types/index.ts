@@ -54,6 +54,9 @@ export interface IrrigationStatus {
   wrsi_cumulative: number;
   yield_reduction_pct: number;
   vulnerability_tier: 'LOW' | 'MODERATE' | 'SEVERE' | 'CATASTROPHIC';
+  system_mode?: 'TESTING' | 'PRODUCTION';
+  operational_status?: string;
+  data_source?: string;
 }
 
 export interface WaterQuality {
@@ -72,6 +75,9 @@ export interface WaterQuality {
     fao_clogging: any;
     who_tanzania_drinking: any;
   };
+  system_mode?: 'TESTING' | 'PRODUCTION';
+  operational_status?: string;
+  data_source?: string;
 }
 
 export interface TreeCountData {
@@ -100,6 +106,9 @@ export interface CarbonMetrics {
   soc_baseline_t_per_ha: number;
   total_soc_tonnes: number;
   uncertainty_range_pct: number;
+  system_mode?: 'TESTING' | 'PRODUCTION';
+  operational_status?: string;
+  data_source?: string;
 }
 
 export interface UserSessionRecord {

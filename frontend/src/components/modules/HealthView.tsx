@@ -38,6 +38,26 @@ export const HealthView: React.FC<HealthViewProps> = ({ parcel }) => {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto overflow-y-auto">
+      {/* System Mode / Pipeline Banner */}
+      <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
+        <div className="flex items-center gap-2">
+          <Activity className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs font-semibold text-slate-300">Multi-Spectral Indices Pipeline:</span>
+          <span className="text-[11px] text-slate-400 font-mono">({data?.data_source || 'Sentinel-2 Multispectral'})</span>
+        </div>
+        {data?.system_mode === 'PRODUCTION' ? (
+          <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            Live GEE Sentinel-2 MSI (Production Mode)
+          </span>
+        ) : (
+          <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            Calibrated Phenology Simulator (Testing Mode)
+          </span>
+        )}
+      </div>
+
       {/* Index Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-panel p-5 rounded-2xl border border-slate-700">

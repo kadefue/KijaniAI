@@ -40,10 +40,21 @@ export const LandCoverView: React.FC<LandCoverViewProps> = ({ parcel }) => {
       {/* Top Banner */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800">
               Optical + SAR Sensor Fusion
             </span>
+            {data?.system_mode === 'PRODUCTION' ? (
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                Live S2+S1 Classification (Production Mode)
+              </span>
+            ) : (
+              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                Regional Baseline LULC Simulator (Testing Mode)
+              </span>
+            )}
             <span className="text-xs text-slate-400">Classification Accuracy: {data?.overall_accuracy_pct}%</span>
           </div>
           <h2 className="text-xl font-black text-white mt-1">KijaniMap: AI Land Use & Land Cover Classification</h2>

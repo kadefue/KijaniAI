@@ -101,10 +101,21 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
       {/* Top Banner & Empirical Regression Header */}
       <div className="glass-panel p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-slate-700">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-300 border border-sky-800">
               Mindu Reservoir Empirical Calibration
             </span>
+            {data.system_mode === 'PRODUCTION' ? (
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                Live Sentinel-2 BOA Retrieval (Production Mode)
+              </span>
+            ) : (
+              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                Mindu Empirical Simulator (Testing Mode)
+              </span>
+            )}
             <span className="text-xs text-slate-400">Sentinel-2 BOA Reflectance</span>
           </div>
           <h2 className="text-xl font-black text-white mt-1">

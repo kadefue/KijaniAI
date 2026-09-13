@@ -127,7 +127,10 @@ def test_modules_count_endpoint_reflects_system_mode():
     assert parcels_resp.status_code == 200
     parcels = parcels_resp.json()
     if not parcels:
-        pytest.skip("No parcels available to test count endpoint")
+        from app.seed.seed_data import seed_database
+        seed_database()
+        parcels = client.get("/api/parcels").json()
+    assert len(parcels) > 0
 
     parcel_id = parcels[0]["id"]
     count_resp = client.get(f"/api/modules/count/{parcel_id}")
@@ -135,3 +138,108 @@ def test_modules_count_endpoint_reflects_system_mode():
     data = count_resp.json()
     assert data["total_trees"] > 0
     assert "crown_polygons_geojson" in data
+
+def test_all_modules_system_mode_transitions():
+    parcels_resp = client.get("/api/parcels")
+    assert parcels_resp.status_code == 200
+    parcels = parcels_resp.json()
+    if not parcels:
+        from app.seed.seed_data import seed_database
+        seed_database()
+        parcels = client.get("/api/parcels").json()
+    assert len(parcels) > 0
+    parcel_id = parcels[0]["id"]
+
+    # 1. TESTING MODE
+    client.put("/api/admin/system-mode", json={"system_mode": "TESTING"})
+    
+    # Irrigation
+    irrig_resp = client.get(f"/api/modules/irrigation/{parcel_id}/status")
+    assert irrig_resp.status_code == 200
+    assert irrig_resp.json()["system_mode"] == "TESTING"
+    assert "CALIBRATED" in irrig_resp.json()["operational_status"]
+
+    # Water
+    water_resp = client.get(f"/api/modules/water/{parcel_id}")
+    assert water_resp.status_code == 200
+    assert water_resp.json()["system_mode"] == "TESTING"
+
+    # Health
+    health_resp = client.get(f"/api/modules/health/{parcel_id}")
+    assert health_resp.status_code == 200
+    assert health_resp.json()["system_mode"] == "TESTING"
+    assert health_resp.json()["is_simulated"] is True
+
+    # Radar
+    radar_resp = client.get(f"/api/modules/radar/{parcel_id}")
+    assert radar_resp.status_code == 200
+    assert radar_resp.json()["system_mode"] == "TESTING"
+    assert radar_resp.json()["is_simulated"] is True
+
+    # Watch
+    watch_resp = client.get(f"/api/modules/watch/{parcel_id}")
+    assert watch_resp.status_code == 200
+    assert watch_resp.json()["system_mode"] == "TESTING"
+    assert watch_resp.json()["is_simulated"] is True
+
+    # Carbon
+    carbon_resp = client.get(f"/api/modules/carbon/{parcel_id}")
+    assert carbon_resp.status_code == 200
+    assert carbon_resp.json()["system_mode"] == "TESTING"
+
+    # Restore
+    restore_resp = client.get(f"/api/modules/restore/{parcel_id}")
+    assert restore_resp.status_code == 200
+    assert restore_resp.json()["system_mode"] == "TESTING"
+
+    # Map
+    map_resp = client.get(f"/api/modules/map/{parcel_id}")
+    assert map_resp.status_code == 200
+    assert map_resp.json()["system_mode"] == "TESTING"
+
+    # 2. PRODUCTION MODE
+    client.put("/api/admin/system-mode", json={"system_mode": "PRODUCTION"})
+
+    # Irrigation
+    irrig_p = client.get(f"/api/modules/irrigation/{parcel_id}/status")
+    assert irrig_p.status_code == 200
+    assert irrig_p.json()["system_mode"] == "PRODUCTION"
+    assert "LIVE" in irrig_p.json()["operational_status"]
+
+    # Water
+    water_p = client.get(f"/api/modules/water/{parcel_id}")
+    assert water_p.status_code == 200
+    assert water_p.json()["system_mode"] == "PRODUCTION"
+
+    # Health
+    health_p = client.get(f"/api/modules/health/{parcel_id}")
+    assert health_p.status_code == 200
+    assert health_p.json()["system_mode"] == "PRODUCTION"
+
+    # Radar
+    radar_p = client.get(f"/api/modules/radar/{parcel_id}")
+    assert radar_p.status_code == 200
+    assert radar_p.json()["system_mode"] == "PRODUCTION"
+
+    # Watch
+    watch_p = client.get(f"/api/modules/watch/{parcel_id}")
+    assert watch_p.status_code == 200
+    assert watch_p.json()["system_mode"] == "PRODUCTION"
+
+    # Carbon
+    carbon_p = client.get(f"/api/modules/carbon/{parcel_id}")
+    assert carbon_p.status_code == 200
+    assert carbon_p.json()["system_mode"] == "PRODUCTION"
+
+    # Restore
+    restore_p = client.get(f"/api/modules/restore/{parcel_id}")
+    assert restore_p.status_code == 200
+    assert restore_p.json()["system_mode"] == "PRODUCTION"
+
+    # Map
+    map_p = client.get(f"/api/modules/map/{parcel_id}")
+    assert map_p.status_code == 200
+    assert map_p.json()["system_mode"] == "PRODUCTION"
+
+    # Reset to TESTING
+    client.put("/api/admin/system-mode", json={"system_mode": "TESTING"})

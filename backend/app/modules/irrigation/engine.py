@@ -117,11 +117,12 @@ class KijaniIrrigationEngine:
         mean_ndvi: float = 0.62,
         current_soil_moisture_pct: float = 22.0, # e.g. from Sentinel-1 SAR
         daily_rainfall_mm: float = 0.0,
+        pump_flow_rate_m3_h: float = 10.0,
         forecast_rainfall_72h_mm: float = 0.0,
-        pump_flow_rate_m3_h: float = 12.0,
         fc_mm_m: Optional[float] = None,
         pwp_mm_m: Optional[float] = None,
         rooting_depth_m: Optional[float] = None,
+        system_mode: str = "TESTING"
     ) -> Dict[str, Any]:
         """
         Calculates daily crop water requirements, root-zone storage, volumetric requirement,
@@ -250,5 +251,12 @@ class KijaniIrrigationEngine:
             "cwri_decadal": cwri_decadal,
             "wrsi_cumulative": wrsi_cumulative,
             "yield_reduction_pct": yield_reduction_pct,
-            "vulnerability_tier": vulnerability_tier
+            "vulnerability_tier": vulnerability_tier,
+            "system_mode": system_mode.upper(),
+            "operational_status": "LIVE_HYDROLOGICAL_FEED" if system_mode.upper() == "PRODUCTION" else "CALIBRATED_DEMO_SIMULATION",
+            "data_source": (
+                "Live OpenWeatherMap & Planetary FAO-56 Penman-Monteith (Production Mode)"
+                if system_mode.upper() == "PRODUCTION"
+                else "Calibrated Agro-Meteorological Simulation (Testing Mode)"
+            )
         }

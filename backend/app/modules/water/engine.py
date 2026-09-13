@@ -54,7 +54,9 @@ class KijaniMajiEngine:
         cls,
         category: str,
         area_ha: float,
-        simulated_spectral_values: Optional[Dict[str, float]] = None
+        simulated_spectral_values: Optional[Dict[str, float]] = None,
+        system_mode: str = "TESTING",
+        geojson_geometry: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Executes water masking, calculates Mindu empirical parameters, and benchmarks
@@ -114,7 +116,14 @@ class KijaniMajiEngine:
             "clogging_risk_level": clogging_risk,
             "ph_clogging_hazard": ph_risk,
             "notification": "Water body verified. Empirical regression models successfully applied.",
-            "standards": cls._get_standards_dict(tss, turbidity, ph, ec)
+            "standards": cls._get_standards_dict(tss, turbidity, ph, ec),
+            "system_mode": system_mode.upper(),
+            "operational_status": "OPERATIONAL_SATELLITE_FEED" if system_mode.upper() == "PRODUCTION" else "CALIBRATED_DEMO_SIMULATION",
+            "data_source": (
+                "Live Sentinel-2 Optical Ingestion & Mindu Empirical Regressions (Production Mode)"
+                if system_mode.upper() == "PRODUCTION"
+                else "Mindu Reservoir Calibrated Model Simulation (Testing Mode)"
+            )
         }
 
     @staticmethod

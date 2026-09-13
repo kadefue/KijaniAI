@@ -152,6 +152,9 @@ class WaterQualityOut(BaseModel):
     water_surface_area_ha: float
     has_water_detected: bool
     standards: Dict[str, Any]
+    system_mode: Optional[str] = "TESTING"
+    operational_status: Optional[str] = "CALIBRATED_SIMULATION"
+    data_source: Optional[str] = None
 
 class PointExtractionRequest(BaseModel):
     points: List[Dict[str, float]] # [{"lat": -6.83, "lon": 37.64, "name": "Station A"}]
@@ -182,6 +185,9 @@ class IrrigationStatusOut(BaseModel):
     explanation_text: str
     confidence_pct: float
     forecast_gated: bool
+    system_mode: Optional[str] = "TESTING"
+    operational_status: Optional[str] = "CALIBRATED_SIMULATION"
+    data_source: Optional[str] = None
 
 class IrrigationLogEvent(BaseModel):
     applied_volume_m3: float
@@ -201,6 +207,9 @@ class CarbonMetricsOut(BaseModel):
     buffer_deduction_pct: float
     net_tco2e_tradable: float
     soc_baseline_t_per_ha: float
+    system_mode: Optional[str] = "TESTING"
+    operational_status: Optional[str] = "CALIBRATED_SIMULATION"
+    data_source: Optional[str] = None
 
 class MRVCertificateOut(BaseModel):
     id: str

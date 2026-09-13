@@ -297,7 +297,18 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-semibold">
+          <div className="flex items-center gap-2 text-xs font-semibold flex-wrap">
+            {status?.system_mode === 'PRODUCTION' ? (
+              <div className="flex items-center gap-1.5 text-emerald-300 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span>Production Mode (Live ET₀)</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-amber-300 bg-amber-950/40 border border-amber-800/60 px-2.5 py-1 rounded-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <span>Testing Mode (Calibrated Simulation)</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-cyan-300 bg-cyan-950/40 border border-cyan-800/60 px-2.5 py-1 rounded-lg">
               <CloudRain className="w-3.5 h-3.5" />
               <span>CHIRPS (0.05°) Rainfall</span>

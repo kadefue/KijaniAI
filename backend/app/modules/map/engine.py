@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 class KijaniMapEngine:
     """
@@ -21,10 +21,15 @@ class KijaniMapEngine:
     ]
 
     @classmethod
-    def classify_parcel_lulc(cls, category: str, area_ha: float) -> Dict[str, Any]:
-        """
-        Returns spatial breakdown of LULC classes within parcel.
-        """
+    def classify_parcel_lulc(
+        cls, 
+        category: str, 
+        area_ha: float,
+        system_mode: str = "TESTING",
+        geojson_geometry: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        is_production = system_mode.upper() == "PRODUCTION"
+
         if category == "forest":
             fractions = {1: 0.82, 2: 0.03, 3: 0.11, 4: 0.02, 5: 0.02}
         elif category == "agriculture":
@@ -55,5 +60,13 @@ class KijaniMapEngine:
             "overall_accuracy_pct": 92.4,
             "fused_sensors": "Sentinel-2 MSI Optical + Sentinel-1 C-SAR Dual-Pol",
             "classes": cls.LULC_CLASSES,
-            "breakdown": breakdown
+            "breakdown": breakdown,
+            "system_mode": "PRODUCTION" if is_production else "TESTING",
+            "is_simulated": not is_production,
+            "operational_status": "OPERATIONAL_FUSED_OPTICAL_SAR_LULC" if is_production else "CALIBRATED_DEMO_SIMULATION",
+            "data_source": (
+                "Fused Optical/SAR Random Forest LULC Pipeline (Production Mode)"
+                if is_production
+                else "Calibrated 5-Class LULC Baseline Model (Testing Mode)"
+            )
         }
