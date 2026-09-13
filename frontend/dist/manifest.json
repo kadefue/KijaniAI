@@ -1,0 +1,16 @@
+{
+  "short_name": "KijaniAI",
+  "name": "KijaniAI - Land, Ecosystem & Irrigation Intelligence",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#080d1a",
+  "theme_color": "#059669",
+  "display": "standalone",
+  "orientation": "any"
+}

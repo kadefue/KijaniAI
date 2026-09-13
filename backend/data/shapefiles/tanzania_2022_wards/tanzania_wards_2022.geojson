@@ -1,0 +1,428 @@
+{
+  "type": "FeatureCollection",
+  "name": "Tanzania_2022PHC_Wards_Representative",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "TZ040101",
+      "properties": {
+        "ward_name": "Mindu",
+        "ward_code": "TZ040101",
+        "district_name": "Morogoro Urban",
+        "region_name": "Morogoro",
+        "zone": "Eastern",
+        "ecozone": "EASTERN_ARC_MONTANE",
+        "category": "water_body",
+        "primary_feature": "Mindu Dam & Water Reservoir (Uluguru Mountain Catchment)",
+        "approx_area_ha": 348.5,
+        "centroid": [
+          37.60249999999999,
+          -6.85
+        ],
+        "bbox": [
+          37.585,
+          -6.865,
+          37.62,
+          -6.835
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              37.585,
+              -6.835
+            ],
+            [
+              37.62,
+              -6.835
+            ],
+            [
+              37.62,
+              -6.865
+            ],
+            [
+              37.585,
+              -6.865
+            ],
+            [
+              37.585,
+              -6.835
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ040102",
+      "properties": {
+        "ward_name": "Mazimbu",
+        "ward_code": "TZ040102",
+        "district_name": "Morogoro Urban",
+        "region_name": "Morogoro",
+        "zone": "Eastern",
+        "ecozone": "MIOMBO",
+        "category": "agriculture",
+        "primary_feature": "Sokoine University of Agriculture Agricultural Research Belt",
+        "approx_area_ha": 210.0,
+        "centroid": [
+          37.64750000000001,
+          -6.815
+        ],
+        "bbox": [
+          37.63,
+          -6.83,
+          37.665,
+          -6.8
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              37.63,
+              -6.8
+            ],
+            [
+              37.665,
+              -6.8
+            ],
+            [
+              37.665,
+              -6.83
+            ],
+            [
+              37.63,
+              -6.83
+            ],
+            [
+              37.63,
+              -6.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ060101",
+      "properties": {
+        "ward_name": "Mlandizi",
+        "ward_code": "TZ060101",
+        "district_name": "Kibaha Rural",
+        "region_name": "Pwani",
+        "zone": "Coast",
+        "ecozone": "COASTAL_FOREST",
+        "category": "agriculture",
+        "primary_feature": "Lower Ruvu Basin Drip & Furrow Maize / Horticultural Scheme",
+        "approx_area_ha": 82.4,
+        "centroid": [
+          38.725,
+          -6.704999999999999
+        ],
+        "bbox": [
+          38.71,
+          -6.72,
+          38.74,
+          -6.69
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.71,
+              -6.69
+            ],
+            [
+              38.74,
+              -6.69
+            ],
+            [
+              38.74,
+              -6.72
+            ],
+            [
+              38.71,
+              -6.72
+            ],
+            [
+              38.71,
+              -6.69
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ040301",
+      "properties": {
+        "ward_name": "Kidatu",
+        "ward_code": "TZ040301",
+        "district_name": "Kilombero",
+        "region_name": "Morogoro",
+        "zone": "Southern Highlands / Floodplains",
+        "ecozone": "FLOODPLAIN_ALLUVIAL",
+        "category": "agriculture",
+        "primary_feature": "Great Ruaha River Basin & Commercial Sugarcane Estates",
+        "approx_area_ha": 412.0,
+        "centroid": [
+          36.959999999999994,
+          -7.690000000000001
+        ],
+        "bbox": [
+          36.94,
+          -7.71,
+          36.98,
+          -7.67
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              36.94,
+              -7.67
+            ],
+            [
+              36.98,
+              -7.67
+            ],
+            [
+              36.98,
+              -7.71
+            ],
+            [
+              36.94,
+              -7.71
+            ],
+            [
+              36.94,
+              -7.67
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ060201",
+      "properties": {
+        "ward_name": "Kisarawe",
+        "ward_code": "TZ060201",
+        "district_name": "Kisarawe",
+        "region_name": "Pwani",
+        "zone": "Coast",
+        "ecozone": "MIOMBO",
+        "category": "restoration",
+        "primary_feature": "Pugu-Kazimzumbwi Catchment & Miombo Reforestation Reserve",
+        "approx_area_ha": 115.0,
+        "centroid": [
+          39.0575,
+          -6.9174999999999995
+        ],
+        "bbox": [
+          39.04,
+          -6.935,
+          39.075,
+          -6.9
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.04,
+              -6.9
+            ],
+            [
+              39.075,
+              -6.9
+            ],
+            [
+              39.075,
+              -6.935
+            ],
+            [
+              39.04,
+              -6.935
+            ],
+            [
+              39.04,
+              -6.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ050101",
+      "properties": {
+        "ward_name": "Lushoto",
+        "ward_code": "TZ050101",
+        "district_name": "Lushoto",
+        "region_name": "Tanga",
+        "zone": "Northern",
+        "ecozone": "EASTERN_ARC_MONTANE",
+        "category": "forest",
+        "primary_feature": "Western Usambara Montane Cloud Forest & High-Altitude Tea/Coffee",
+        "approx_area_ha": 265.0,
+        "centroid": [
+          38.290000000000006,
+          -4.789999999999999
+        ],
+        "bbox": [
+          38.27,
+          -4.81,
+          38.31,
+          -4.77
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.27,
+              -4.77
+            ],
+            [
+              38.31,
+              -4.77
+            ],
+            [
+              38.31,
+              -4.81
+            ],
+            [
+              38.27,
+              -4.81
+            ],
+            [
+              38.27,
+              -4.77
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ030101",
+      "properties": {
+        "ward_name": "Kahe",
+        "ward_code": "TZ030101",
+        "district_name": "Moshi Rural",
+        "region_name": "Kilimanjaro",
+        "zone": "Northern",
+        "ecozone": "SAVANNAH",
+        "category": "agriculture",
+        "primary_feature": "Mount Kilimanjaro Volcanic Alluvial Agroforestry & Pangani Tributaries",
+        "approx_area_ha": 175.0,
+        "centroid": [
+          37.44,
+          -3.5
+        ],
+        "bbox": [
+          37.42,
+          -3.52,
+          37.46,
+          -3.48
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              37.42,
+              -3.48
+            ],
+            [
+              37.46,
+              -3.48
+            ],
+            [
+              37.46,
+              -3.52
+            ],
+            [
+              37.42,
+              -3.52
+            ],
+            [
+              37.42,
+              -3.48
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "TZ010201",
+      "properties": {
+        "ward_name": "Kondoa Mjini",
+        "ward_code": "TZ010201",
+        "district_name": "Kondoa",
+        "region_name": "Dodoma",
+        "zone": "Central",
+        "ecozone": "SEMI_ARID",
+        "category": "grassland",
+        "primary_feature": "HADO Soil Erosion Rehabilitation & Semi-Arid Pastoral Zone",
+        "approx_area_ha": 190.0,
+        "centroid": [
+          35.790000000000006,
+          -4.91
+        ],
+        "bbox": [
+          35.77,
+          -4.93,
+          35.81,
+          -4.89
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.77,
+              -4.89
+            ],
+            [
+              35.81,
+              -4.89
+            ],
+            [
+              35.81,
+              -4.93
+            ],
+            [
+              35.77,
+              -4.93
+            ],
+            [
+              35.77,
+              -4.89
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

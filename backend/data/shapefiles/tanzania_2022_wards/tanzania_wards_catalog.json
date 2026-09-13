@@ -1,0 +1,16 @@
+{
+  "dataset_title": "Tanzania 2022 Population and Housing Census (PHC) Administrative Ward Shapefiles",
+  "dataset_title_sw": "Mipaka ya Kata Sensa ya Watu na Makazi 2022 (NBS Tanzania)",
+  "publisher": "National Bureau of Statistics (NBS) Tanzania / Ofisi ya Taifa ya Takwimu",
+  "census_year": 2022,
+  "official_download_url": "https://www.nbs.go.tz/uploads/statistics/documents/en-1714652282-TANZANIA_2022PHC_WARD_SHAPEFILES.zip",
+  "format": "ESRI Shapefile (.shp, .shx, .dbf, .prj) archived in ZIP",
+  "coordinate_reference_system": "WGS 84 (EPSG:4326) / Arc 1960 UTM Zones 36S & 37S",
+  "coverage": "United Republic of Tanzania (Mainland 26 Regions + Zanzibar 5 Regions)",
+  "administrative_level": "Level 3 - Wards (Kata) and Enumeration Areas (EAs)",
+  "total_wards_approx": 3956,
+  "file_size_bytes": 10419963,
+  "file_size_mb": 9.94,
+  "supported_in_kijani": true,
+  "kijani_ingestion_engine": "GeometryParser.parse_shapefile_zip"
+}

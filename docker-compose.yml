@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: kijani_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kijani
+      POSTGRES_PASSWORD: kijanipass
+      POSTGRES_DB: kijani_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kijani -d kijani_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: kijani_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  storage:
+    image: minio/minio:RELEASE.2024-03-15T01-07-19Z
+    container_name: kijani_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kijani_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kijani_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://kijani:kijanipass@db:5432/kijani_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      STORAGE_ENDPOINT: http://storage:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: gemma4
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      storage:
+        condition: service_started
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kijani_celery_worker
+    restart: unless-stopped
+    command: celery -A app.worker.celery_app.celery_app worker --loglevel=info -c 4
+    environment:
+      DATABASE_URL: postgresql://kijani:kijanipass@db:5432/kijani_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      STORAGE_ENDPOINT: http://storage:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      OLLAMA_BASE_URL: http://ollama:11434
+    depends_on:
+      - db
+      - redis
+      - storage
+
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kijani_celery_beat
+    restart: unless-stopped
+    command: celery -A app.worker.celery_app.celery_app beat --loglevel=info
+    environment:
+      DATABASE_URL: postgresql://kijani:kijanipass@db:5432/kijani_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kijani_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  ollama_models:
