@@ -58,7 +58,7 @@ class Parcel(Base):
     if "sqlite" in db_url or "sqlite" in str(engine.url):
         geom = Column(Text, nullable=True)
     else:
-        geom = Column(Geometry(geometry_type="POLYGON", srid=4326, management=True), nullable=True)
+        geom = Column(Geometry(geometry_type="POLYGON", srid=4326), nullable=True)
     
     # GeoJSON fallback representation for simple DB storage and API serialization
     geojson_geometry = Column(JSON, nullable=False)
