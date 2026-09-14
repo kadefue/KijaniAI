@@ -12,6 +12,7 @@ import { WatchView } from './components/modules/WatchView';
 import { RestoreView } from './components/modules/RestoreView';
 import { LandCoverView } from './components/modules/LandCoverView';
 import { MabadilikoView } from './components/modules/MabadilikoView';
+import { SettingsView } from './components/modules/SettingsView';
 import { DropzoneModal } from './components/common/DropzoneModal';
 import { WalletModal } from './components/common/WalletModal';
 import { UserManualModal } from './components/common/UserManualModal';
@@ -128,6 +129,7 @@ export const App: React.FC = () => {
         selectedParcel={selectedParcel}
         onSelectParcel={(p) => {
           setSelectedParcel(p);
+          setCrownGeojson(null);
           trackAction('parcel_switched', { parcel_id: p.id });
         }}
         onOpenUpload={() => setIsUploadOpen(true)}
@@ -166,12 +168,15 @@ export const App: React.FC = () => {
               crownGeojson={crownGeojson}
               activeLayer={getActiveLayerForTab(activeTab)}
               onOpenForestReserves={() => setIsForestReservesOpen(true)}
+              onClearCrowns={() => setCrownGeojson(null)}
             />
           </div>
 
           {/* Module Analytical Dashboard (Right or Bottom) */}
           <div className="w-full md:w-1/2 h-1/2 md:h-full overflow-y-auto bg-slate-900/50">
-            {selectedParcel ? (
+            {activeTab === 'settings' ? (
+              <SettingsView />
+            ) : selectedParcel ? (
               <>
                 {activeTab === 'irrigation' && <IrrigationView parcel={selectedParcel} />}
                 {activeTab === 'water' && <MajiWaterView parcel={selectedParcel} />}

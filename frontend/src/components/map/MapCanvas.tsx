@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
-import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders, Trees } from 'lucide-react';
+import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders, Trees, X, CheckSquare, Square } from 'lucide-react';
 import { Parcel } from '../../types';
 
 interface MapCanvasProps {
@@ -8,6 +8,7 @@ interface MapCanvasProps {
   crownGeojson?: any;
   activeLayer?: string;
   onOpenForestReserves?: () => void;
+  onClearCrowns?: () => void;
 }
 
 export type BaseMapType = 'satellite' | 'osm_standard' | 'hybrid' | 'opentopo';
@@ -67,10 +68,11 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   crownGeojson,
   activeLayer = 'rgb',
   onOpenForestReserves,
+  onClearCrowns,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  
+
   // Basemap & Analytic Layer state
   const [baseMap, setBaseMap] = useState<BaseMapType>('satellite');
   const [currentLayer, setCurrentLayer] = useState<string>(activeLayer);
@@ -79,6 +81,9 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const [showOpacityControl, setShowOpacityControl] = useState<boolean>(false);
   const [isSplitScreen, setIsSplitScreen] = useState<boolean>(false);
   const [showForestReserves, setShowForestReserves] = useState<boolean>(true);
+  const [showParcelBoundary, setShowParcelBoundary] = useState<boolean>(true);
+  const [showCrowns, setShowCrowns] = useState<boolean>(true);
+  const [showLayersPanel, setShowLayersPanel] = useState<boolean>(false);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -284,10 +289,18 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     updateParcelGeometry(map, parcel.geojson_geometry);
   }, [parcel]);
 
-  // Add/Update Tree Crowns Vector Layer
+  // Add/Update/Remove Tree Crowns Vector Layer
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded() || !crownGeojson) return;
+    if (!map || !map.isStyleLoaded()) return;
+
+    // Data was cleared (or a new parcel has no crowns yet) - tear the layer down
+    // completely instead of leaving stale dots on the map forever.
+    if (!crownGeojson) {
+      if (map.getLayer('crowns_points')) map.removeLayer('crowns_points');
+      if (map.getSource('crowns_source')) map.removeSource('crowns_source');
+      return;
+    }
 
     if (map.getSource('crowns_source')) {
       (map.getSource('crowns_source') as maplibregl.GeoJSONSource).setData(crownGeojson);
@@ -301,6 +314,9 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         id: 'crowns_points',
         type: 'circle',
         source: 'crowns_source',
+        layout: {
+          visibility: showCrowns ? 'visible' : 'none',
+        },
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 2, 16, 6],
           'circle-color': '#10b981',
@@ -311,6 +327,24 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       });
     }
   }, [crownGeojson]);
+
+  // Toggle Tree Crowns visibility independently of (re)loading the data
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+    if (map.getLayer('crowns_points')) {
+      map.setLayoutProperty('crowns_points', 'visibility', showCrowns ? 'visible' : 'none');
+    }
+  }, [showCrowns]);
+
+  // Toggle Parcel Boundary visibility
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+    const visibility = showParcelBoundary ? 'visible' : 'none';
+    if (map.getLayer('parcel_fill')) map.setLayoutProperty('parcel_fill', 'visibility', visibility);
+    if (map.getLayer('parcel_outline')) map.setLayoutProperty('parcel_outline', 'visibility', visibility);
+  }, [showParcelBoundary]);
 
   // Fetch and render official Tanzania Forest Reserves GeoJSON layer
   useEffect(() => {
@@ -574,6 +608,20 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
               <span>Catalog &rarr;</span>
             </button>
           )}
+
+          <div className="h-4 w-px bg-slate-700 mx-1 hidden sm:block" />
+
+          {/* Layers Panel Toggle - show/hide/remove every overlay currently on the map */}
+          <button
+            onClick={() => setShowLayersPanel(!showLayersPanel)}
+            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition ${
+              showLayersPanel ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+            }`}
+            title="Manage Map Layers"
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>Layers</span>
+          </button>
         </div>
 
         {/* Optional Opacity Slider Popover */}
@@ -592,6 +640,79 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
             <span className="text-[11px] font-mono text-emerald-400 w-8 text-right">
               {Math.round(overlayOpacity * 100)}%
             </span>
+          </div>
+        )}
+
+        {/* Layers Management Popover - every layer currently drawn on the map,
+            each independently show/hide-able (and Tree Crowns removable). */}
+        {showLayersPanel && (
+          <div className="glass-panel rounded-xl p-2 shadow-2xl border border-slate-700 bg-slate-900/95 w-72 animate-fade-in">
+            <div className="flex items-center justify-between px-1.5 pb-1.5 mb-1 border-b border-slate-800">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Active Map Layers</span>
+              <button onClick={() => setShowLayersPanel(false)} className="text-slate-500 hover:text-slate-200 transition">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Analysis Overlay */}
+            <button
+              onClick={() => setAnalyticVisible(!analyticVisible)}
+              className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-800/70 transition text-left"
+            >
+              <span className="flex items-center gap-2 text-xs text-slate-200">
+                {analyticVisible ? <CheckSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <Square className="w-3.5 h-3.5 text-slate-500 shrink-0" />}
+                Analysis Overlay
+              </span>
+              <span className="text-[10px] text-slate-500">{currentLayer}</span>
+            </button>
+
+            {/* Parcel Boundary */}
+            {parcel && (
+              <button
+                onClick={() => setShowParcelBoundary(!showParcelBoundary)}
+                className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-800/70 transition text-left"
+              >
+                <span className="flex items-center gap-2 text-xs text-slate-200">
+                  {showParcelBoundary ? <CheckSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <Square className="w-3.5 h-3.5 text-slate-500 shrink-0" />}
+                  Parcel Boundary
+                </span>
+              </button>
+            )}
+
+            {/* Tree Crown Detections - show/hide AND fully clear */}
+            {crownGeojson && (
+              <div className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-800/70 transition">
+                <button
+                  onClick={() => setShowCrowns(!showCrowns)}
+                  className="flex items-center gap-2 text-xs text-slate-200 flex-1 text-left"
+                >
+                  {showCrowns ? <CheckSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <Square className="w-3.5 h-3.5 text-slate-500 shrink-0" />}
+                  Tree Crown Detections
+                  <span className="text-[10px] text-slate-500">({crownGeojson.features?.length || 0})</span>
+                </button>
+                {onClearCrowns && (
+                  <button
+                    onClick={onClearCrowns}
+                    title="Remove crown detections from the map"
+                    className="text-rose-400 hover:text-rose-300 hover:bg-rose-950/60 rounded p-1 transition shrink-0"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Tanzania Forest Reserves */}
+            <button
+              onClick={() => setShowForestReserves(!showForestReserves)}
+              className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-800/70 transition text-left"
+            >
+              <span className="flex items-center gap-2 text-xs text-slate-200">
+                {showForestReserves ? <CheckSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <Square className="w-3.5 h-3.5 text-slate-500 shrink-0" />}
+                Forest Reserves
+              </span>
+              <span className="text-[10px] text-slate-500">696 TFS</span>
+            </button>
           </div>
         )}
 

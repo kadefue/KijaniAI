@@ -1,21 +1,22 @@
 import React from 'react';
-import { 
-  Droplets, Waves, Trees, Leaf, Radio, Award, AlertTriangle, 
-  RotateCcw, Map, Smartphone, History 
+import {
+  Droplets, Waves, Trees, Leaf, Radio, Award, AlertTriangle,
+  RotateCcw, Map, Smartphone, History, Settings as SettingsIcon
 } from 'lucide-react';
 
-export type ModuleTab = 
-  | 'irrigation' 
-  | 'water' 
-  | 'count' 
-  | 'health' 
-  | 'radar' 
-  | 'carbon' 
-  | 'watch' 
-  | 'restore' 
-  | 'map' 
+export type ModuleTab =
+  | 'irrigation'
+  | 'water'
+  | 'count'
+  | 'health'
+  | 'radar'
+  | 'carbon'
+  | 'watch'
+  | 'restore'
+  | 'map'
   | 'mabadiliko'
-  | 'sync';
+  | 'sync'
+  | 'settings';
 
 interface SidebarProps {
   activeTab: ModuleTab;
@@ -114,11 +115,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, parcel
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-800 bg-slate-900/60 backdrop-blur-md flex flex-col shrink-0 h-full overflow-y-auto">
-      <div className="p-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+    <aside className="w-64 border-r border-slate-800 bg-slate-900/60 backdrop-blur-md flex flex-col shrink-0 h-full">
+      <div className="p-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0">
         Analytical Engines
       </div>
-      <nav className="flex-1 px-2 space-y-1 pb-4">
+      <nav className="flex-1 px-2 space-y-1 pb-4 overflow-y-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -162,6 +163,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onSelectTab, parcel
           );
         })}
       </nav>
+
+      {/* Settings - pinned below the analytical engines, not a data module */}
+      <div className="p-2 border-t border-slate-800 shrink-0">
+        <button
+          onClick={() => onSelectTab('settings')}
+          className={`w-full flex items-center gap-2.5 p-2.5 rounded-xl text-left transition-all ${
+            activeTab === 'settings'
+              ? 'bg-slate-800/90 text-white shadow-md border border-slate-700/80'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+          }`}
+        >
+          <div
+            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+              activeTab === 'settings' ? 'bg-slate-700/80 shadow-inner' : 'bg-slate-800/40'
+            }`}
+          >
+            <SettingsIcon className="w-4 h-4 text-slate-300" />
+          </div>
+          <span className="text-xs font-bold">Settings</span>
+        </button>
+      </div>
     </aside>
   );
 };

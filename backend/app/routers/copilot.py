@@ -65,9 +65,13 @@ async def chat_with_copilot(req: CopilotChatRequest, db: Session = Depends(get_d
                 {"role": "system", "content": SYSTEM_PROMPT + context_str},
                 *[{"role": m.role, "content": m.content} for m in req.messages]
             ],
-            "stream": False
+            "stream": False,
+            # Keep the model resident in memory well past Ollama's 5-minute
+            # default, so a chat after a short pause doesn't pay a ~35s cold
+            # reload penalty on every request.
+            "keep_alive": "30m"
         }
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=90.0) as client:
             resp = await client.post(ollama_url, json=payload)
             if resp.status_code == 200:
                 result = resp.json()
