@@ -368,6 +368,18 @@ class SystemModeUpdate(BaseModel):
     updated_by: Optional[str] = "admin"
 
 
+class CopilotModelOut(BaseModel):
+    active_model: str
+    available_models: List[Dict[str, str]]
+    last_updated_at: Optional[datetime] = None
+    updated_by: Optional[str] = "admin"
+
+
+class CopilotModelUpdate(BaseModel):
+    model_id: str
+    updated_by: Optional[str] = "admin"
+
+
 # Official Tanzania NBS 2022 Census Boundaries Schemas
 class TanzaniaNBSInfoOut(BaseModel):
     dataset_title: str

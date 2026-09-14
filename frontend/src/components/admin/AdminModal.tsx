@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import rrwebPlayer from 'rrweb-player';
 import { api } from '../../api/client';
-import { PricingTier, UserSessionRecord, RetentionCampaign, FreeTierSettings, SystemModeStatus } from '../../types';
+import { PricingTier, UserSessionRecord, RetentionCampaign, FreeTierSettings, SystemModeStatus, CopilotModelStatus } from '../../types';
 
 interface AdminModalProps {
   isOpen: boolean;
@@ -45,6 +45,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
   const [systemModeStatus, setSystemModeStatus] = useState<SystemModeStatus | null>(null);
   const [switchingMode, setSwitchingMode] = useState<boolean>(false);
 
+  // Copilot Model Selection (Llama 3.3, Llama 4, Gemma 2, ...)
+  const [copilotModelStatus, setCopilotModelStatus] = useState<CopilotModelStatus | null>(null);
+  const [switchingCopilotModel, setSwitchingCopilotModel] = useState<boolean>(false);
+
   // Free-Tier Service Selection & Climate Engines (GEE, CHIRPS, OpenWeatherMap)
   const [freeTierSettings, setFreeTierSettings] = useState<FreeTierSettings | null>(null);
   const [activeFreeProvider, setActiveFreeProvider] = useState<string>('GEE');
@@ -71,6 +75,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
     try {
       // Always fetch current system mode status
       api.getSystemMode().then(setSystemModeStatus).catch(() => null);
+      api.getCopilotModel().then(setCopilotModelStatus).catch(() => null);
 
       if (activeTab === 'pricing') {
         const res = await api.getPricingTiers();
@@ -129,6 +134,20 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
       alert(err.message || 'Failed to switch system operational mode');
     } finally {
       setSwitchingMode(false);
+    }
+  };
+
+  const handleSwitchCopilotModel = async (modelId: string) => {
+    setSwitchingCopilotModel(true);
+    try {
+      const updated = await api.updateCopilotModel(modelId);
+      setCopilotModelStatus(updated);
+      setStatusMsg(`Copilot model switched to ${updated.active_model} for all users.`);
+      setTimeout(() => setStatusMsg(null), 4000);
+    } catch (err: any) {
+      alert(err.message || 'Failed to switch Copilot model');
+    } finally {
+      setSwitchingCopilotModel(false);
     }
   };
 
@@ -396,6 +415,48 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
               <Zap className="w-3.5 h-3.5" />
               Production Mode
             </button>
+          </div>
+        </div>
+
+        {/* Copilot Model Selector (Llama 3.3, Llama 4, Gemma 2, ...) */}
+        <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl border shrink-0 bg-cyan-500/10 border-cyan-500/30 text-cyan-400">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-slate-400">Copilot Model:</span>
+                <span className="text-xs font-extrabold px-2 py-0.5 rounded-full border bg-cyan-500/20 text-cyan-300 border-cyan-500/40">
+                  {copilotModelStatus?.available_models.find((m) => m.id === copilotModelStatus.active_model)?.label
+                    || copilotModelStatus?.active_model
+                    || 'Loading...'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-0.5">
+                {copilotModelStatus?.available_models.find((m) => m.id === copilotModelStatus.active_model)?.description
+                  || 'The Ollama model used to answer every user\'s Copilot chat request.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 self-stretch md:self-auto justify-end shrink-0">
+            {(copilotModelStatus?.available_models || []).map((m) => (
+              <button
+                key={m.id}
+                onClick={() => handleSwitchCopilotModel(m.id)}
+                disabled={switchingCopilotModel || copilotModelStatus?.active_model === m.id}
+                title={m.description}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
+                  copilotModelStatus?.active_model === m.id
+                    ? 'bg-cyan-600 text-white border-cyan-500 shadow-md shadow-cyan-900/30 cursor-default'
+                    : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+                }`}
+              >
+                <Cpu className="w-3.5 h-3.5" />
+                {m.label}
+              </button>
+            ))}
           </div>
         </div>
 

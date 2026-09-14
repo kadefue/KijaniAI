@@ -4,9 +4,10 @@ from typing import Dict, Any, List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.all_models import Parcel, IrrigationRecord, WaterQualityMetrics, EcosystemMetrics
+from app.models.all_models import Parcel, IrrigationRecord, WaterQualityMetrics, EcosystemMetrics, SystemSetting
 from app.schemas.schemas import CopilotChatRequest
 from app.config import settings
+from app.services.copilot_models import DEFAULT_COPILOT_MODEL
 
 logger = logging.getLogger("kijani.copilot")
 
@@ -50,11 +51,16 @@ async def chat_with_copilot(req: CopilotChatRequest, db: Session = Depends(get_d
 
     last_user_message = req.messages[-1].content if req.messages else "Hello"
 
+    # Resolve the admin-selected model (falls back to the .env default, then the
+    # hardcoded default, if no admin choice has ever been saved)
+    model_setting = db.query(SystemSetting).filter(SystemSetting.key == "copilot_model").first()
+    active_model = model_setting.value if model_setting else (settings.OLLAMA_MODEL or DEFAULT_COPILOT_MODEL)
+
     # Attempt calling Ollama
     try:
         ollama_url = f"{settings.OLLAMA_BASE_URL}/api/chat"
         payload = {
-            "model": settings.OLLAMA_MODEL,
+            "model": active_model,
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT + context_str},
                 *[{"role": m.role, "content": m.content} for m in req.messages]
@@ -66,9 +72,9 @@ async def chat_with_copilot(req: CopilotChatRequest, db: Session = Depends(get_d
             if resp.status_code == 200:
                 result = resp.json()
                 return {"reply": result.get("message", {}).get("content", "")}
-            logger.warning(f"Ollama returned status {resp.status_code}: {resp.text[:500]}")
+            logger.warning(f"Ollama returned status {resp.status_code} for model '{active_model}': {resp.text[:500]}")
     except Exception as exc:
-        logger.warning(f"Ollama call failed, falling back to rule-based copilot: {exc}")
+        logger.warning(f"Ollama call failed for model '{active_model}', falling back to rule-based copilot: {exc}")
 
     # Intelligent agronomic rule-based copilot fallback
     msg_lower = last_user_message.lower()

@@ -205,6 +205,14 @@ export const api = {
       body: JSON.stringify({ system_mode: systemMode }),
     }),
 
+  // Copilot Model Selection (Llama 3.3, Llama 4, Gemma 2, ...)
+  getCopilotModel: () => fetchJson<any>('/admin/copilot-model'),
+  updateCopilotModel: (modelId: string) =>
+    fetchJson<any>('/admin/copilot-model', {
+      method: 'PUT',
+      body: JSON.stringify({ model_id: modelId }),
+    }),
+
   // Official Tanzania NBS 2022 Census Ward Boundaries
   getTanzaniaNbsInfo: () => fetchJson<any>('/parcels/tanzania-nbs/info'),
   getTanzaniaNbsCatalog: () => fetchJson<any>('/parcels/tanzania-nbs/catalog'),

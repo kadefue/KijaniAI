@@ -9,8 +9,10 @@ from app.schemas.schemas import (
     SatelliteApiConfigOut, SatelliteApiConfigUpdate,
     SatelliteApiTestRequest, SatelliteApiTestResponse,
     FreeTierSettingsOut, FreeTierSettingsUpdate,
-    SystemModeStatusOut, SystemModeUpdate
+    SystemModeStatusOut, SystemModeUpdate,
+    CopilotModelOut, CopilotModelUpdate
 )
+from app.services.copilot_models import AVAILABLE_COPILOT_MODELS, DEFAULT_COPILOT_MODEL
 from app.services.stac_service import STACService
 from app.services.storage_service import storage_service
 from app.services.satellite_api_engine import SatelliteAPIEngine
@@ -84,6 +86,49 @@ def update_system_mode(payload: SystemModeUpdate, db: Session = Depends(get_db))
     db.refresh(db_setting)
 
     return get_system_mode(db=db)
+
+@router.get("/copilot-model", response_model=CopilotModelOut)
+def get_copilot_model(db: Session = Depends(get_db)):
+    """
+    Returns the Ollama model currently powering the Copilot chat endpoint,
+    plus the list of models an admin may choose between.
+    """
+    db_setting = db.query(SystemSetting).filter(SystemSetting.key == "copilot_model").first()
+    active = db_setting.value if db_setting else DEFAULT_COPILOT_MODEL
+
+    return {
+        "active_model": active,
+        "available_models": AVAILABLE_COPILOT_MODELS,
+        "last_updated_at": db_setting.updated_at if db_setting else None,
+        "updated_by": db_setting.updated_by if db_setting else "system"
+    }
+
+@router.put("/copilot-model", response_model=CopilotModelOut)
+def update_copilot_model(payload: CopilotModelUpdate, db: Session = Depends(get_db)):
+    """
+    Switches the Ollama model used by the Copilot chat endpoint for all users.
+    """
+    valid_ids = {m["id"] for m in AVAILABLE_COPILOT_MODELS}
+    if payload.model_id not in valid_ids:
+        raise HTTPException(status_code=400, detail=f"Invalid model_id. Must be one of {sorted(valid_ids)}")
+
+    db_setting = db.query(SystemSetting).filter(SystemSetting.key == "copilot_model").first()
+    if not db_setting:
+        db_setting = SystemSetting(
+            key="copilot_model",
+            value=payload.model_id,
+            description="Active Ollama model used by the Copilot chat endpoint",
+            updated_by=payload.updated_by or "admin"
+        )
+        db.add(db_setting)
+    else:
+        db_setting.value = payload.model_id
+        db_setting.updated_by = payload.updated_by or "admin"
+
+    db.commit()
+    db.refresh(db_setting)
+
+    return get_copilot_model(db=db)
 
 @router.get("/free-tier-provider", response_model=FreeTierSettingsOut)
 def get_free_tier_provider():

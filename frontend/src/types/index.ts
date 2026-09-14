@@ -200,6 +200,19 @@ export interface ParcelWeatherForecast {
   city_name: string;
 }
 
+export interface CopilotModelOption {
+  id: string;
+  label: string;
+  description: string;
+}
+
+export interface CopilotModelStatus {
+  active_model: string;
+  available_models: CopilotModelOption[];
+  last_updated_at: string | null;
+  updated_by: string;
+}
+
 export interface SystemModeStatus {
   system_mode: 'TESTING' | 'PRODUCTION';
   is_testing_mode: boolean;
