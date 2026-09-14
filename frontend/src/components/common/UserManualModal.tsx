@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  X, BookOpen, Search, Sprout, ShieldCheck, TreePine, Droplets, 
-  Smartphone, Sparkles, CheckCircle2, AlertTriangle, ArrowRight, 
-  Download, Layers, Compass, HelpCircle, ExternalLink, Globe, Cpu, CloudRain
+import {
+  X, BookOpen, Search, Sprout, ShieldCheck, TreePine, Droplets,
+  Smartphone, Sparkles, CheckCircle2, AlertTriangle, ArrowRight,
+  Download, Layers, Compass, HelpCircle, ExternalLink, Globe, Cpu, CloudRain,
+  History, Mail
 } from 'lucide-react';
 
 interface UserManualModalProps {
@@ -14,7 +15,7 @@ interface UserManualModalProps {
   onToggleCopilot?: () => void;
 }
 
-type RoleTab = 'farmer' | 'admin' | 'carbon' | 'water' | 'ranger' | 'swahili';
+type RoleTab = 'farmer' | 'admin' | 'carbon' | 'water' | 'ranger' | 'mabadiliko' | 'swahili';
 
 export const UserManualModal: React.FC<UserManualModalProps> = ({
   isOpen,
@@ -76,6 +77,15 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
       desc: 'KijaniSync offline PWA pack, on-device smartphone camera AI for DBH & tree species'
     },
     {
+      id: 'mabadiliko' as RoleTab,
+      label: 'MabadilikoAI & Notifications',
+      swahili: 'Mabadiliko ya Ardhi & Taarifa za Barua Pepe',
+      icon: History,
+      color: 'from-violet-500 to-purple-700',
+      badgeBg: 'bg-violet-950/80 text-violet-300 border-violet-500/40',
+      desc: 'Decadal (1-10 year) land cover change dynamics, bilingual AI narratives, and background email alerts'
+    },
+    {
       id: 'swahili' as RoleTab,
       label: 'Mwongozo wa Kiswahili',
       swahili: 'Masika, Vuli, Umwagiliaji & Istilahi',
@@ -127,11 +137,10 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
               <button
                 key={role.id}
                 onClick={() => setActiveRole(role.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap border shrink-0 ${
-                  isActive
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap border shrink-0 ${isActive
                     ? `bg-gradient-to-r ${role.color} text-white border-white/20 shadow-md`
                     : 'bg-slate-800/70 text-slate-300 border-slate-700/60 hover:bg-slate-800 hover:text-white'
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{role.label}</span>
@@ -457,7 +466,68 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
             </div>
           )}
 
-          {/* TAB 6: SWAHILI GUIDE */}
+          {/* TAB 6: MABADILIKOAI & EMAIL NOTIFICATIONS */}
+          {activeRole === 'mabadiliko' && (
+            <div className="space-y-6">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-violet-950/60 via-slate-900 to-purple-950/60 border border-violet-700/40">
+                <div className="flex items-center gap-2 text-violet-300 font-bold text-sm mb-1">
+                  <History className="w-4 h-4" />
+                  <span>MabadilikoAI: Multi-Temporal Land Cover Change Dynamics</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Answers "what changed, and why?" for any parcel or custom boundary over a historical window of up to 10 years, sampled monthly through annually, with a bilingual AI-generated narrative explaining the likely drivers.
+                </p>
+              </div>
+
+              {/* Instant vs Background Job */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-2">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-violet-900 text-violet-300">Instant Mode</span>
+                  <h4 className="text-sm font-bold text-white">Fast Results for Registered Parcels</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Select a parcel or draw a custom boundary in the MabadilikoAI tab, pick your time horizon and interval, and click <strong>Run Analysis</strong>. Results return in seconds — ideal for quick checks.
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-2">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-900 text-purple-300">Background Job Mode</span>
+                  <h4 className="text-sm font-bold text-white">For Large Boundaries or Long Horizons</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Submit as a background job (e.g. for an entire district or forest reserve). Optionally enter an email address — you can close the tab and the platform emails you the moment it finishes.
+                  </p>
+                </div>
+              </div>
+
+              {/* Email Notifications Callout */}
+              <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50 space-y-3">
+                <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                  <Mail className="w-4 h-4 text-cyan-400" />
+                  <span>Automated Email Notifications</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Background Celery workers automatically send a branded HTML email the moment a long-running task finishes — you never need to keep a browser tab open waiting:
+                </p>
+                <ul className="text-xs text-slate-300 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Imagery order completes</strong> — tree count, carbon & water metrics — emailed to your account address.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>MRV certificate is generated</strong> — certificate number, net tradable tCO₂e, and verification link — emailed to your account address.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>MabadilikoAI background job completes</strong> — bilingual net change summary and AI narrative — emailed to the address you supplied at submission.</span>
+                  </li>
+                </ul>
+                <p className="text-[11px] text-slate-500">
+                  Delivery runs asynchronously and never delays the underlying result — if an email fails to send, your order, certificate, or job still completes normally.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: SWAHILI GUIDE */}
           {activeRole === 'swahili' && (
             <div className="space-y-6">
               <div className="p-4 rounded-xl bg-gradient-to-r from-rose-950/60 via-slate-900 to-pink-950/60 border border-rose-700/40">

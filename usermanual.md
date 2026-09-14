@@ -34,8 +34,15 @@
    - [6.1 Offline Field Pack Download (IndexedDB Dexie.js)](#61-offline-field-pack-download-indexeddb-dexiejs)
    - [6.2 On-Device Edge AI Camera Measurement (DBH & Species)](#62-on-device-edge-ai-camera-measurement-dbh--species)
    - [6.3 Seamless Cloud Synchronization](#63-seamless-cloud-synchronization)
-7. [Bilingual Gemma 4 AI Copilot (English & Kiswahili)](#7-bilingual-gemma-4-ai-copilot-english--kiswahili)
-8. [Glossary & Swahili Terminology](#8-glossary--swahili-terminology)
+7. [MabadilikoAI: Multi-Temporal Land Cover Change Dynamics](#7-mabadilikoai-multi-temporal-land-cover-change-dynamics)
+   - [7.1 Instant Analysis for a Registered Parcel or Custom Boundary](#71-instant-analysis-for-a-registered-parcel-or-custom-boundary)
+   - [7.2 Long-Running Jobs & Email Notification on Completion](#72-long-running-jobs--email-notification-on-completion)
+   - [7.3 Reading the Timeline, Transition Matrix & AI Narrative](#73-reading-the-timeline-transition-matrix--ai-narrative)
+8. [Bilingual Gemma 4 AI Copilot (English & Kiswahili)](#8-bilingual-gemma-4-ai-copilot-english--kiswahili)
+9. [Automated Email Notifications](#9-automated-email-notifications)
+   - [9.1 What Triggers an Email](#91-what-triggers-an-email)
+   - [9.2 Configuring the SMTP Relay (Administrators)](#92-configuring-the-smtp-relay-administrators)
+10. [Glossary & Swahili Terminology](#10-glossary--swahili-terminology)
 
 ---
 
@@ -46,8 +53,8 @@ KijaniAI provides a unified split-screen workstation:
   - **Parcel Selector:** Dropdown menu to switch instantly between registered farms, schemes, and water reservoirs.
   - **Operational Mode Badge:** Labeled either `Testing Mode (Demo)` (purple flask) or `Production Mode` (emerald zap). Clicking opens the Admin Hub.
   - **Online/Offline Status:** Green badge indicates cloud connectivity; amber badge indicates offline PWA mode with local IndexedDB storage.
-  - **Action Tools:** `Import Boundary`, `KijaniSync`, `Acquire Tiers ($ Wallet)`, `Admin Hub`, `Gemma 4 Copilot`, and `User Manual`.
-- **Left Sidebar:** Tab navigation for all 10 intelligence engines:
+  - **Action Tools:** `Import Boundary`, `KijaniSync`, `Acquire Tiers ($ Wallet)`, `Forest Reserves`, `Admin Hub`, `Gemma 4 Copilot`, and `User Manual`.
+- **Left Sidebar:** Tab navigation for all 11 intelligence engines:
   - 💧 **KijaniIrrigation:** FAO-56 Penman-Monteith daily water requirement, dynamic $K_c$, pumping hours, 72h forecast gating, and decadal CWRI.
   - 🌊 **KijaniMaji:** Remote sensing water quality calibrated for Tanzanian reservoirs (Mindu Dam empirical regressions for TSS, Turbidity, pH, EC).
   - 🌲 **KijaniCount:** DeepForest AI individual tree crown detection, density per hectare, and crown cover percentage.
@@ -57,6 +64,7 @@ KijaniAI provides a unified split-screen workstation:
   - 🛡️ **KijaniWatch:** Deforestation early warnings, burn scar severity (NBR), and forest boundary encroachment.
   - 🌱 **KijaniRestore:** Forest and wetland restoration cohort survival tracking and canopy expansion rate.
   - 🗺️ **KijaniMap:** 5-class fused optical/SAR Land Use Land Cover (LULC) baseline classification.
+  - 🕰️ **MabadilikoAI:** Multi-temporal (1–10 year) land cover change dynamics with bilingual AI-generated narrative explanations.
   - 📱 **KijaniSync:** Field ground-truthing PWA with edge camera AI.
 - **Left/Top Center Workspace:** Interactive MapLibre GL map canvas rendering true-color satellite imagery, NDVI heatmaps, water quality layers, SAR backscatter, OpenStreetMap cartography, and vector boundaries.
 - **Right/Bottom Center Workspace:** Module analytical dashboard displaying charts, KPIs, forecasts, regression tables, and action forms.
@@ -191,6 +199,13 @@ Administrators can switch the entire platform between two modes via the **Admin 
    - Exports the official GeoJSON collection to `backend/data/shapefiles/tanzania_2022_wards/tanzania_wards_2022.geojson`.
    - Enables sub-millisecond point-in-polygon spatial inference for any coordinate across Tanzania.
 
+### 3.7 Managing Official Tanzania Forest Reserves (TFS Gazetted Reserves)
+1. Click **`Forest Reserves`** in the top navigation bar to open the Forest Reserves panel.
+2. Click **`Ingest Official Reserves`** (or `POST /api/forest-reserves/ingest`) to load all **696 gazetted Tanzania Forestry Service (TFS) reserves** (~9,568,018 ha) into the PostGIS database.
+3. Browse or search the reserve catalog by name, region, or category; select any reserve to view its official boundary, area, and management status on the map.
+4. Click **`Import as Monitored Parcel`** on any reserve to promote it into a fully monitored KijaniAI parcel — this immediately makes it selectable across KijaniWatch, KijaniCount, and KijaniCarbon.
+5. Open **`Land Cover Monitoring`** on a reserve to review encroachment and canopy-loss signals specific to that reserve's boundary.
+
 ---
 
 ## 4. Role 3: Environmental Authorities, Carbon Developers & MRV Auditors
@@ -282,7 +297,33 @@ KijaniSync operates in remote areas without cellular or satellite data:
 
 ---
 
-## 7. Bilingual Gemma 4 AI Copilot (English & Kiswahili)
+## 7. MabadilikoAI: Multi-Temporal Land Cover Change Dynamics
+
+MabadilikoAI answers "what changed, and why?" for any registered parcel or custom boundary over a historical window of up to **10 years**.
+
+### 7.1 Instant Analysis for a Registered Parcel or Custom Boundary
+1. Select a parcel and switch to the **MabadilikoAI** tab in the sidebar — this runs an instant analysis and returns results immediately.
+2. Alternatively, draw or upload a **custom boundary** (ward, district, region, forest reserve, or any polygon) directly inside the MabadilikoAI tab for an ad-hoc analysis without registering a parcel.
+3. Choose your **time horizon** (1–10 years) and **sampling interval**: Monthly, Bi-Monthly, Quarterly, Bi-Annually, or Annually.
+4. Click **`Run Analysis`**. Results typically return in a few seconds for instant mode.
+
+### 7.2 Long-Running Jobs & Email Notification on Completion
+For very large boundaries (e.g. an entire district or forest reserve) or long time horizons, use the background job mode instead of waiting on the instant endpoint:
+1. In the MabadilikoAI tab, locate the **"Run as Background Job"** panel.
+2. Optionally enter your email address in the **notify email** field — leave it blank to skip email notification and just poll for status instead.
+3. Click **`Submit Job`**. The system immediately returns a `job_id` and begins processing in the background — you can navigate away or close the tab.
+4. The job progresses through **PENDING → PROCESSING → COMPLETED** (or **FAILED**), with a live progress bar and message shown if you keep the tab open.
+5. If you supplied an email address, you'll automatically receive a bilingual **"MabadilikoAI Analysis Complete"** email the moment the job finishes — see [§9 Automated Email Notifications](#9-automated-email-notifications). No further action is needed; just check your inbox.
+
+### 7.3 Reading the Timeline, Transition Matrix & AI Narrative
+- **Timeline Scrubber:** Step through each sampled time interval to watch land cover composition evolve, with an animated bar showing the proportion of each class.
+- **4 Land Cover Classes:** Vegetation & Forest Cover, Water Sources & Wetlands, Built-Up Structures & Settlements, and Bare Soil & Degraded Ground.
+- **Net Change Summary:** Shows the net hectare and percentage change for each class between the first and last time step.
+- **Bilingual AI Narrative:** A plain-language English and Kiswahili explanation of the likely drivers behind the observed change (e.g. charcoal harvesting pressure, agricultural expansion, peri-urban growth, sedimentation, or active regeneration).
+
+---
+
+## 8. Bilingual Gemma 4 AI Copilot (English & Kiswahili)
 
 Click the **`Gemma 4 Copilot`** button in the top navigation bar to open the intelligent agronomic assistant.
 
@@ -307,7 +348,25 @@ The copilot automatically loads your currently selected parcel, including:
 
 ---
 
-## 8. Glossary & Swahili Terminology
+## 9. Automated Email Notifications
+
+Several long-running operations across the platform send you a branded HTML email the moment they finish, so you never need to keep a browser tab open waiting.
+
+### 9.1 What Triggers an Email
+| When this happens... | ...you receive this email | Sent to |
+|---|---|---|
+| An imagery order finishes processing (tree count, carbon & water metrics) | **"Imagery Analysis Ready"** — tree count, net tCO₂e sequestered, and a link to the parcel dashboard | Your registered account email |
+| An MRV carbon certificate is generated (§4.1) | **"MRV Certificate Ready"** — certificate number, net tradable tCO₂e, and a verification link | Your registered account email |
+| A MabadilikoAI background job completes (§7.2) | **"MabadilikoAI Analysis Complete"** — bilingual net change summary per class and the AI narrative | The email address you entered when submitting the job |
+
+Each email is sent from a background worker and never delays the action that triggered it — your certificate, order, or job result appears in the app immediately, and the email typically arrives within seconds afterward.
+
+### 9.2 Configuring the SMTP Relay (Administrators)
+Email delivery is configured entirely through environment variables (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_CRYPTO`, `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME` in `.env`) — see the [README §7 Environment Configuration](file:///Users/kadefue/KijaniAI/README.md#step-1-environment-configuration-env) for the full reference. No in-app configuration is required; if an email fails to send (e.g. misconfigured credentials), the underlying order, certificate, or job still completes normally — only the notification is affected.
+
+---
+
+## 10. Glossary & Swahili Terminology
 
 | Term / Neno | Meaning & Scientific Context |
 |---|---|
@@ -325,3 +384,5 @@ The copilot automatically loads your currently selected parcel, including:
 | **Umwagiliaji** | Irrigation (Drip = Matone, Sprinkler = Mnyunyizo, Pivot = Mzunguko, Furrow = Mifereji). |
 | **Hewa ya Ukaa** | Carbon credits and carbon sequestration ($\text{tCO}_2\text{e}$). |
 | **Sensa ya Watu na Makazi 2022** | Official Tanzania 2022 Population and Housing Census by NBS Tanzania, source of national ward shapefiles. |
+| **Mabadiliko** | "Changes" in Kiswahili — namesake of MabadilikoAI, the multi-temporal land cover change dynamics engine. |
+| **Hifadhi ya Msitu** | Gazetted forest reserve (e.g. the 696 official Tanzania Forestry Service reserves ingested by KijaniAI). |

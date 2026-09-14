@@ -236,7 +236,7 @@ def get_session_replay(session_id: str, db: Session = Depends(get_db)):
             "session_id": sess.id,
             "abandoned_step": sess.abandoned_step,
             "events": [
-                {"type": 4, "data": {"href": "http://localhost:5173", "width": 1280, "height": 720}, "timestamp": 1000},
+                {"type": 4, "data": {"href": "http://localhost:5176", "width": 1280, "height": 720}, "timestamp": 1000},
                 {"type": 2, "data": {"node": {"type": 0, "childNodes": []}}, "timestamp": 1200},
                 {"type": 3, "data": {"source": 2, "type": 1, "id": 1, "x": 300, "y": 200}, "timestamp": 1800}
             ]

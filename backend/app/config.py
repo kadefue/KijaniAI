@@ -9,17 +9,17 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
     # Spatial Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://kijani:kijanipass@localhost:5432/kijani_db")
-    
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://kijani:KijaniPgSecure2026@localhost:5442/kijani_db")
+
     # Redis / Celery Broker
-    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-    CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
-    
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://:KijaniRedisSecure2026@localhost:6783/0")
+    CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://:KijaniRedisSecure2026@localhost:6783/0")
+    CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", "redis://:KijaniRedisSecure2026@localhost:6783/0")
+
     # S3 / MinIO Object Storage
-    STORAGE_ENDPOINT: str = os.getenv("STORAGE_ENDPOINT", "http://localhost:9000")
-    STORAGE_ACCESS_KEY: str = os.getenv("STORAGE_ACCESS_KEY", "minioadmin")
-    STORAGE_SECRET_KEY: str = os.getenv("STORAGE_SECRET_KEY", "minioadmin")
+    STORAGE_ENDPOINT: str = os.getenv("STORAGE_ENDPOINT", "http://localhost:9012")
+    STORAGE_ACCESS_KEY: str = os.getenv("STORAGE_ACCESS_KEY", "kijanistorageadmin")
+    STORAGE_SECRET_KEY: str = os.getenv("STORAGE_SECRET_KEY", "KijaniMinioSecure2026")
     STORAGE_BUCKET_RAW: str = "satellite-raw"
     STORAGE_BUCKET_COGS: str = "satellite-cogs"
     STORAGE_BUCKET_MRV: str = "mrv-certificates"
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     LOCAL_STORAGE_DIR: str = os.getenv("LOCAL_STORAGE_DIR", "/tmp/kijani_storage")
     
     # Local LLM (Ollama Gemma 4)
-    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11444")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "gemma4")
     
     # SMTP / Email Notifications (Gmail Relay via suanet.ac.tz)

@@ -23,9 +23,12 @@ The platform fuses:
 - **Empirical reservoir water quality retrieval** calibrated for Tanzanian water bodies (**Mindu Dam, Morogoro**).
 - **Satellite-driven hydrological irrigation decision engine** implementing **FAO-56 Penman-Monteith**, dynamic remote sensing $K_c$, 72-hour forecast rainfall gating, and decadal **Crop Water Requirements Index (CWRI)** failure forecasting.
 - **Official Tanzania Administrative Boundaries** from the **National Bureau of Statistics (NBS) 2022 Population and Housing Census (PHC)**, with sub-millisecond point-in-polygon spatial inference.
+- **Official Tanzania Forest Reserves layer**: 696 gazetted Tanzania Forestry Service (TFS) reserves (9.57M ha) loaded into PostGIS for reserve-level land cover monitoring.
+- **MabadilikoAI multi-temporal change dynamics**: decadal (1–10 year) land cover transition analysis at monthly-to-annual intervals, with bilingual English/Kiswahili AI-generated narrative explanations of *why* land changed.
 - **Dual Operational System Modes** (Testing Mode for photorealistic investor/donor demos vs Production Mode for operational AI models).
 - **Bilingual English/Kiswahili AI Copilot** powered by local **Gemma 4** (Ollama).
 - **Behavioral UX retention telemetry** using `rrweb` session replay and AI-driven win-back email automation.
+- **Automated email notifications**: background Celery workers dispatch branded HTML emails (via SMTP relay) the moment a long-running imagery order, MRV certificate, or MabadilikoAI analysis job finishes.
 
 ---
 
@@ -57,7 +60,7 @@ The platform fuses:
                         +---------------------------+
                         |    Celery Async Worker    | <---> DeepForest / PyTorch / GDAL
                         | (Heavy Geospatial, SAR,   | <---> WeasyPrint Cryptographic PDF
-                        |  Hydrology & Win-Back)    |
+                        |  Hydrology & Win-Back)    | <---> SMTP Relay (Branded HTML Email)
                         +-------------+-------------+
                                       |
                                       v
@@ -115,6 +118,21 @@ Calibrated against validated empirical regression models from **Mindu Reservoir 
 * Solves optical tropical cloud cover using C-band SAR Level-1 GRD backscatter ($\sigma^0_{\text{VV}}, \sigma^0_{\text{VH}}$ in dB) with Lee speckle filtering.
 * Dual-Polarization Radar Vegetation Index: $\text{RVI} = \frac{4 \times \sigma^0_{\text{VH}}}{\sigma^0_{\text{VV}} + \sigma^0_{\text{VH}}}$.
 * Continuous cloud-free surface soil moisture and flood extent delineation.
+
+### 🕰️ MabadilikoAI (Multi-Temporal Land Cover Change Dynamics)
+* Analyzes land cover transformation over a user-defined historical window of up to **10 years**, sampled at **monthly, bi-monthly, quarterly, bi-annual, or annual** intervals.
+* Classifies every time step into 4 land cover classes — **Vegetation & Forest Cover**, **Water Sources & Wetlands**, **Built-Up Structures & Settlements**, and **Bare Soil & Degraded Ground** — and computes class-to-class transition matrices between the first and last observation.
+* **Bilingual AI Narrative Explanations:** Auto-generates a plain-language English *and* Kiswahili summary identifying the likely drivers behind observed change (e.g. charcoal/agricultural pressure, peri-urban expansion, sedimentation, regeneration).
+* **Two execution modes:**
+  * **Synchronous (instant):** `GET /api/modules/mabadiliko/{parcel_id}/changes` or `POST /analyze-boundary` for fast, immediate results on registered parcels or ad-hoc boundaries.
+  * **Asynchronous (long jobs):** `POST /jobs/submit` queues a background Celery task, returns a `job_id` immediately (HTTP 202), and the client polls `GET /jobs/{job_id}/status`. Supplying `notify_email` sends a bilingual HTML completion email automatically — see [§11 Automated Email Notifications](#11-automated-email-notifications).
+* Frontend timeline scrubber replays the land cover evolution step-by-step with an animated class-composition chart and the AI explanation panel.
+
+### 🌳 Official Tanzania Forest Reserves (TFS Gazetted Reserves)
+* Ingests and persists **696 officially gazetted Tanzania Forestry Service (TFS) reserves** (~9,568,018 ha total) into PostGIS via `POST /api/forest-reserves/ingest`.
+* Interactive map layer (toggle from the **Forest Reserves** button in the top navigation bar) renders reserve boundaries with area, category, and management status.
+* **1-Click Monitoring Import:** `POST /api/forest-reserves/{reserve_id}/import-to-monitoring` promotes any gazetted reserve into a fully monitored KijaniAI parcel.
+* **Per-Reserve Land Cover Endpoint:** `GET /api/forest-reserves/{reserve_id}/land-cover` surfaces encroachment and canopy-loss signals for a specific reserve.
 
 ### 🌿 KijaniHealth, 🛡️ KijaniWatch, 🌱 KijaniRestore, 🗺️ KijaniMap & 📱 KijaniSync
 * **KijaniHealth:** Computes NDVI, EVI, SAVI ($L=0.5$), and NDWI mapped to Tanzanian *Masika* (March–May) and *Vuli* (October–December) calendars.
@@ -182,22 +200,52 @@ Copy the example configuration file:
 cp .env.example .env
 ```
 
-Edit `.env` to configure your credentials and providers:
+Edit `.env` to configure your credentials and providers. **KijaniAI intentionally avoids every well-known default port** (5432, 6379, 8000, 9000, etc.) so the stack never collides with other local dev projects, and ships with non-default service passwords out of the box:
 ```env
 # Core Application & Security
 SECRET_KEY=your-secure-production-secret-key-change-this
-DATABASE_URL=postgresql://kijani:kijanipass@localhost:5432/kijani_db
-REDIS_URL=redis://localhost:6379/0
-CELERY_BROKER_URL=redis://localhost:6379/0
+
+# Docker Compose Service Credentials & Host Ports (single source of truth —
+# docker-compose.yml interpolates these ${VARS} directly; change the passwords
+# before any shared or internet-reachable deployment)
+POSTGRES_USER=kijani
+POSTGRES_PASSWORD=change-this-postgres-password
+POSTGRES_DB=kijani_db
+POSTGRES_PORT=5442
+
+REDIS_PASSWORD=change-this-redis-password
+REDIS_PORT=6783
+
+MINIO_ROOT_USER=kijanistorageadmin
+MINIO_ROOT_PASSWORD=change-this-minio-password
+MINIO_API_PORT=9012
+MINIO_CONSOLE_PORT=9013
+
+OLLAMA_PORT=11444
+API_PORT=8012
+FRONTEND_PORT=3012
+
+DATABASE_URL=postgresql://kijani:change-this-postgres-password@localhost:5442/kijani_db
+REDIS_URL=redis://:change-this-redis-password@localhost:6783/0
+CELERY_BROKER_URL=redis://:change-this-redis-password@localhost:6783/0
 
 # Object Storage (MinIO / S3)
-STORAGE_ENDPOINT=http://localhost:9000
-STORAGE_ACCESS_KEY=minioadmin
-STORAGE_SECRET_KEY=minioadmin
+STORAGE_ENDPOINT=http://localhost:9012
+STORAGE_ACCESS_KEY=kijanistorageadmin
+STORAGE_SECRET_KEY=change-this-minio-password
 
 # Ollama Bilingual Copilot
-OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_BASE_URL=http://localhost:11444
 OLLAMA_MODEL=gemma4
+
+# SMTP / Email Notifications (imagery orders, MRV certificates, MabadilikoAI jobs)
+SMTP_HOST=smtp-relay.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-relay-user@yourdomain.tz
+SMTP_PASSWORD=your-smtp-app-password
+SMTP_CRYPTO=tls
+SMTP_FROM_EMAIL=noreply@yourdomain.tz
+SMTP_FROM_NAME=KijaniAI Platform
 
 # Free-Tier Provider (GEE, PLANETARY_COMPUTER, or CDSE)
 FREE_TIER_PROVIDER=GEE
@@ -241,15 +289,17 @@ docker compose up --build
 ```
 
 ### Services & Endpoints Port Reference:
+All host ports are deliberately non-default to avoid colliding with other local projects. Each is configurable via its `${VAR}` in `.env`.
+
 | Service | URL / Port | Credentials / Notes |
 |---|---|---|
-| **Frontend Web App** | `http://localhost:3000` | React 18 + Vite + Tailwind + MapLibre GL |
-| **API Gateway (FastAPI)** | `http://localhost:8000` | OpenAPI Swagger Docs at `http://localhost:8000/docs` |
-| **Spatial Database** | `localhost:5432` | PostgreSQL 16 + PostGIS 3.4 (`kijani_db` / `kijanipass`) |
-| **Redis Broker** | `localhost:6379` | Celery Message Queue & Spatial Cache |
-| **MinIO Console** | `http://localhost:9001` | Object Storage Console (`minioadmin` / `minioadmin`) |
-| **MinIO S3 API** | `http://localhost:9000` | S3-compatible raster & document endpoint |
-| **Ollama LLM Engine** | `http://localhost:11434` | Gemma 4 Copilot |
+| **Frontend Web App** | `http://localhost:3012` | React 18 + Vite + Tailwind + MapLibre GL (`FRONTEND_PORT`) |
+| **API Gateway (FastAPI)** | `http://localhost:8012` | OpenAPI Swagger Docs at `http://localhost:8012/docs` (`API_PORT`) |
+| **Spatial Database** | `localhost:5442` | PostgreSQL 16 + PostGIS 3.4 — db `kijani_db`, user/password from `POSTGRES_USER` / `POSTGRES_PASSWORD` (`POSTGRES_PORT`) |
+| **Redis Broker** | `localhost:6783` | Celery Message Queue & Spatial Cache — password-protected via `REDIS_PASSWORD` (`REDIS_PORT`) |
+| **MinIO Console** | `http://localhost:9013` | Object Storage Console — credentials from `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` (`MINIO_CONSOLE_PORT`) |
+| **MinIO S3 API** | `http://localhost:9012` | S3-compatible raster & document endpoint (`MINIO_API_PORT`) |
+| **Ollama LLM Engine** | `http://localhost:11444` | Gemma 4 Copilot (`OLLAMA_PORT`) |
 | **Celery Worker** | Background | Async DeepForest & WeasyPrint Worker |
 
 ---
@@ -267,7 +317,7 @@ pip install -r requirements.txt
 python -m app.seed.seed_data
 
 # Start FastAPI server
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8012
 ```
 
 #### 2. Start Celery Async Worker:
@@ -281,7 +331,7 @@ celery -A app.worker.tasks.celery_app worker --loglevel=info
 cd frontend
 npm install
 npm run dev
-# Application opens at http://localhost:5173
+# Application opens at http://localhost:5176
 ```
 
 ---
@@ -289,15 +339,16 @@ npm run dev
 ## 8. Operational Runbook & Administration
 
 ### Default Credentials
-- **Admin User:** `admin@kijani.ai`
-- **Admin Password:** `kijanipass`
+- **Admin User (app login):** `admin@kijani.ai`
+- **Admin Password (app login):** `kijanipass` — a seeded demo application account, unrelated to the infrastructure service credentials below. Change it via `POST /api/auth/register` + role update, or directly in `backend/app/seed/seed_data.py`, before any shared deployment.
 - **Initial Wallet Credit:** `$1,250.00` trial balance.
+- **Infrastructure service credentials** (PostgreSQL, Redis, MinIO) are set in `.env` — see [§7 Step 1](#step-1-environment-configuration-env). Change `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, and `MINIO_ROOT_PASSWORD` before any shared or internet-reachable deployment.
 
 ### Toggling Testing Mode vs Production Mode
 - **Via Admin Hub:** Click the mode badge in the top navigation bar or the Admin Shield icon. In the Executive Banner, click **`Switch to Production Mode`** or **`Switch to Testing Mode`**.
 - **Via REST API:**
   ```bash
-  curl -X PUT http://localhost:8000/api/admin/system-mode \
+  curl -X PUT http://localhost:8012/api/admin/system-mode \
     -H "Content-Type: application/json" \
     -d '{"mode": "PRODUCTION"}'
   ```
@@ -311,11 +362,11 @@ npm run dev
 ### Synchronizing Official Tanzania Shapefiles
 - Execute shapefile synchronization to ensure all 2022 Census wards are indexed in the database:
   ```bash
-  curl -X POST http://localhost:8000/api/parcels/tanzania-nbs/sync-storage
+  curl -X POST http://localhost:8012/api/parcels/tanzania-nbs/sync-storage
   ```
 - Fast coordinate inference test:
   ```bash
-  curl "http://localhost:8000/api/parcels/tanzania-nbs/infer-ward?lat=-6.85&lon=37.60"
+  curl "http://localhost:8012/api/parcels/tanzania-nbs/infer-ward?lat=-6.85&lon=37.60"
   # Resolves instantly to Mindu Ward, Morogoro Urban
   ```
 
@@ -330,16 +381,18 @@ cd backend
 PYTHONPATH=. DATABASE_URL="sqlite:////tmp/kijani_test.db" uv run --with-requirements requirements.txt --with pytest pytest tests/
 ```
 
-**Test Suite Coverage (48 tests passing with 100% success rate):**
+**Test Suite Coverage (62 tests across 11 files):**
 - `test_tanzania_boundaries.py`: NBS 2022 Census shapefile metadata, catalog listing, 1-click import, database storage, physical folder GeoJSON caching, and sub-millisecond point-in-polygon spatial inference. (7 tests)
-- `test_system_mode.py`: System operational mode retrieval, dynamic mode transitions (Testing vs Production), invalid mode rejection, DeepForest PyTorch RetinaNet execution, and calibrated simulation. (5 tests)
+- `test_system_mode.py`: System operational mode retrieval, dynamic mode transitions (Testing vs Production), invalid mode rejection, DeepForest PyTorch RetinaNet execution, and calibrated simulation. (6 tests)
 - `test_gee_climate.py`: Free-tier provider retrieval and switching (GEE vs Planetary Computer vs CDSE), GEE & OpenWeatherMap diagnostics, parcel weather forecast, CHIRPS rainfall time-series, and GEE server-side reduction pipeline. (9 tests)
 - `test_satellite_api_engine.py`: Multi-tier config loading, API key masking, Planet Orders payload construction with geometry clipping, database saving, admin endpoints, live connection testing, and dataset downloading. (6 tests)
 - `test_api_endpoints.py`: Healthcheck, parcel listing, Gemma 4 copilot chat, dynamic 256x256 XYZ raster tile rendering, predefined soil profiles, custom user soil parameters, and irrigation reflection. (6 tests)
-- `test_irrigation_engine.py`: FAO-56 Penman-Monteith $\text{ET}_0$, dynamic satellite $K_c$, USDA-SCS effective precipitation, root-zone storage, 72h forecast gating, and decadal CWRI. (5 tests)
+- `test_irrigation_engine.py`: FAO-56 Penman-Monteith $\text{ET}_0$, dynamic satellite $K_c$, USDA-SCS effective precipitation, root-zone storage, 72h forecast gating, and decadal CWRI. (6 tests)
 - `test_water_engine.py`: MNDWI water masking, Mindu Reservoir regressions for TSS, Turbidity, pH, EC, and FAO clogging risk tiers. (4 tests)
 - `test_carbon_engine.py`: Allometric equations across Miombo, Eastern Arc, Mangrove, and Savannah, stand-level $\text{tCO}_2\text{e}$ conversion, $15\%$ risk buffer pool deduction, and MRV verification tokens. (3 tests)
 - `test_geometry_parser.py`: Shapefile `.zip`, KMZ, CSV closed-loop coordinate boundary parsing, topological repair, and geodesic hectare calculation. (2 tests)
+- `test_forest_reserves.py`: TFS reserve catalog metadata, list & search filtering, GeoJSON export, reserve detail lookup by ID, monitoring-parcel import, and per-reserve land cover monitoring. (6 tests)
+- `test_mabadiliko_engine.py`: 10-year monthly-interval evaluation, custom year/interval combinations, max-year horizon cap enforcement, supported-intervals metadata endpoint, parcel decadal-changes endpoint, custom boundary analysis endpoint, and Tanzania basins summary endpoint. (7 tests)
 
 ### Running Frontend Production Build
 ```bash
@@ -354,3 +407,27 @@ npm run build
 
 - Complete role-based operational documentation is available in [`usermanual.md`](file:///Users/kadefue/KijaniAI/usermanual.md).
 - In the web app, click the **`Manual / Mwongozo`** button in the top navigation bar to open the colorful, interactive guide with role-specific tabs for farmers, administrators, carbon auditors, hydrologists, and field rangers.
+
+---
+
+## 11. Automated Email Notifications
+
+KijaniAI dispatches branded HTML email notifications from **background Celery workers** the moment a long-running job finishes, so users never have to keep a browser tab open waiting on a result.
+
+### What triggers an email
+| Trigger | Task | Sent To |
+|---|---|---|
+| Imagery order completes (crown detection, carbon & water metrics) | `process_imagery_order_task` | The parcel owner's registered account email |
+| MRV carbon certificate is generated | `send_mrv_certificate_email_task` (dispatched after `POST /api/modules/carbon/{parcel_id}/generate-mrv`) | The parcel owner's registered account email |
+| MabadilikoAI async change-detection job completes | `run_mabadiliko_analysis_task` | The optional `notify_email` supplied at job submission (`POST /api/modules/mabadiliko/jobs/submit`) |
+
+Every email is delivered **asynchronously in the worker process** — the triggering API call returns immediately and never blocks on SMTP latency. A delivery failure (e.g. bad credentials, relay unreachable) is logged and never fails the underlying order, certificate, or analysis job.
+
+### Configuration
+Set the `SMTP_*` variables in `.env` (see [§7 Environment Configuration](#step-1-environment-configuration-env)). When running via Docker Compose, both the `api` and `celery_worker` services load `.env` directly (`env_file:` in `docker-compose.yml`), so no values need to be duplicated into the compose file itself.
+
+### Templates
+All templates live in `backend/app/services/email_service.py` and share one KijaniAI-branded HTML shell:
+- **Imagery Analysis Ready** — tree count and net tCO₂e sequestered, with a link to the parcel dashboard.
+- **MRV Certificate Ready** — certificate number, net tradable tCO₂e, and a verification link.
+- **MabadilikoAI Analysis Complete** — bilingual (English + Kiswahili) net land cover change summary per class, plus the AI-generated narrative explanation.
