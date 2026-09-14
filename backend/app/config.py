@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     
     # Local LLM (Ollama Gemma 4)
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11444")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "gemma4")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "gemma2:2b")
     
     # SMTP / Email Notifications (Gmail Relay via suanet.ac.tz)
     SMTP_PROTOCOL: str = os.getenv("SMTP_PROTOCOL", "smtp")

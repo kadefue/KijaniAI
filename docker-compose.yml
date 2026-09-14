@@ -74,7 +74,7 @@ services:
       STORAGE_ACCESS_KEY: ${MINIO_ROOT_USER}
       STORAGE_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: gemma4
+      OLLAMA_MODEL: gemma2:2b
     ports:
       - "${API_PORT}:8000"
     depends_on:

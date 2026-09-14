@@ -1,3 +1,4 @@
+import logging
 import httpx
 from typing import Dict, Any, List
 from fastapi import APIRouter, Depends
@@ -6,6 +7,8 @@ from app.database import get_db
 from app.models.all_models import Parcel, IrrigationRecord, WaterQualityMetrics, EcosystemMetrics
 from app.schemas.schemas import CopilotChatRequest
 from app.config import settings
+
+logger = logging.getLogger("kijani.copilot")
 
 router = APIRouter(prefix="/copilot", tags=["Gemma 4 Copilot"])
 
@@ -58,13 +61,14 @@ async def chat_with_copilot(req: CopilotChatRequest, db: Session = Depends(get_d
             ],
             "stream": False
         }
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=60.0) as client:
             resp = await client.post(ollama_url, json=payload)
             if resp.status_code == 200:
                 result = resp.json()
                 return {"reply": result.get("message", {}).get("content", "")}
-    except Exception:
-        pass
+            logger.warning(f"Ollama returned status {resp.status_code}: {resp.text[:500]}")
+    except Exception as exc:
+        logger.warning(f"Ollama call failed, falling back to rule-based copilot: {exc}")
 
     # Intelligent agronomic rule-based copilot fallback
     msg_lower = last_user_message.lower()
