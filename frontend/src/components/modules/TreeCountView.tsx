@@ -68,7 +68,7 @@ export const TreeCountView: React.FC<TreeCountViewProps> = ({ parcel, onCrownsLo
             <span className="text-xs text-slate-400 font-semibold">Total Trees Detected</span>
             <Trees className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="text-3xl font-black text-white mt-2">{data?.total_trees.toLocaleString()}</div>
+          <div className="text-3xl font-black text-slate-50 mt-2">{data?.total_trees.toLocaleString()}</div>
           <div className="text-[11px] text-emerald-400 mt-1 flex items-center gap-1">
             <CheckCircle className="w-3.5 h-3.5" />
             <span>DeepForest PyTorch Inference</span>
@@ -80,7 +80,7 @@ export const TreeCountView: React.FC<TreeCountViewProps> = ({ parcel, onCrownsLo
             <span className="text-xs text-slate-400 font-semibold">Stand Density</span>
             <BarChart2 className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-3xl font-black text-white mt-2">{data?.density_per_ha} <span className="text-sm font-normal text-slate-400">trees/ha</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-2">{data?.density_per_ha} <span className="text-sm font-normal text-slate-400">trees/ha</span></div>
           <div className="text-[11px] text-slate-400 mt-1">Ecozone: {parcel.ecozone}</div>
         </div>
 
@@ -89,7 +89,7 @@ export const TreeCountView: React.FC<TreeCountViewProps> = ({ parcel, onCrownsLo
             <span className="text-xs text-slate-400 font-semibold">Crown Cover</span>
             <Layers className="w-4 h-4 text-teal-400" />
           </div>
-          <div className="text-3xl font-black text-white mt-2">{data?.crown_cover_pct}%</div>
+          <div className="text-3xl font-black text-slate-50 mt-2">{data?.crown_cover_pct}%</div>
           <div className="text-[11px] text-slate-400 mt-1">Canopy Closure Percentage</div>
         </div>
 
@@ -98,14 +98,14 @@ export const TreeCountView: React.FC<TreeCountViewProps> = ({ parcel, onCrownsLo
             <span className="text-xs text-slate-400 font-semibold">Mean Crown Diameter</span>
             <Box className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="text-3xl font-black text-white mt-2">{data?.mean_crown_diameter_m} <span className="text-sm font-normal text-slate-400">m</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-2">{data?.mean_crown_diameter_m} <span className="text-sm font-normal text-slate-400">m</span></div>
           <div className="text-[11px] text-slate-400 mt-1">Mean Area: {data?.mean_crown_area_sqm} m²</div>
         </div>
       </div>
 
       {/* Spacing Regularity & Spatial Layout */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-3">
-        <h3 className="text-sm font-bold text-white">Spatial Spacing Regularity vs. Natural Clustering</h3>
+        <h3 className="text-sm font-bold text-slate-50">Spatial Spacing Regularity vs. Natural Clustering</h3>
         <p className="text-xs text-slate-300 leading-relaxed">
           The nearest-neighbor distance analysis indicates a <span className="text-emerald-400 font-bold">{data?.spacing_pattern}</span> distribution.
           Natural regeneration stands in {parcel.ecozone} show characteristic clustering around drainage veins and fertile soil pockets.

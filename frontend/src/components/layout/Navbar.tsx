@@ -1,9 +1,11 @@
 import React from 'react';
-import { 
-  Sprout, Droplets, Satellite, Upload, HardDriveDownload, 
-  Wallet, ShieldCheck, Wifi, WifiOff, Sparkles, FlaskConical, Zap, BookOpen, Trees 
+import {
+  Sprout, Droplets, Satellite, Upload, HardDriveDownload,
+  Wallet, ShieldCheck, Wifi, WifiOff, Sparkles, FlaskConical, Zap, BookOpen, Trees,
+  Sun, Moon
 } from 'lucide-react';
 import { Parcel } from '../../types';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface NavbarProps {
   parcels: Parcel[];
@@ -36,6 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   walletBalance,
   systemMode = 'TESTING',
 }) => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 flex items-center justify-between z-30 shrink-0">
       {/* Brand & Region */}
@@ -45,7 +49,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-teal-200 to-white bg-clip-text text-transparent">
+            <span
+              className={`text-xl font-extrabold tracking-tight bg-gradient-to-r bg-clip-text text-transparent ${
+                theme === 'dark' ? 'from-emerald-400 via-teal-200 to-white' : 'from-emerald-600 via-teal-700 to-slate-900'
+              }`}
+            >
               KijaniAI
             </span>
             <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/50">
@@ -153,6 +161,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="text-emerald-200 text-[10px] hidden sm:inline">Acquire Tiers</span>
         </button>
 
+        {/* Light / Dark Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition"
+          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-indigo-400" />
+          )}
+        </button>
+
         {/* Admin Dashboard */}
         <button
           onClick={onOpenAdmin}
@@ -165,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* User Manual Playbook (Mwongozo) */}
         <button
           onClick={onOpenManual}
-          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-600/30 to-orange-600/30 hover:from-amber-600/50 hover:to-orange-600/50 text-amber-200 border border-amber-500/40 shadow-sm transition"
+          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900/80 text-amber-300 border border-amber-600/50 shadow-sm transition"
           title="Open KijaniAI User Manual (Mwongozo wa Mtumiaji)"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-400" />

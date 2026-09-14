@@ -95,11 +95,11 @@ export const WalletModal: React.FC<WalletModalProps> = ({
           <div className="flex items-center gap-2">
             <Satellite className="w-5 h-5 text-emerald-400" />
             <div>
-              <h3 className="text-base font-extrabold text-white">Acquire Satellite Imagery Tiers</h3>
+              <h3 className="text-base font-extrabold text-slate-50">Acquire Satellite Imagery Tiers</h3>
               <p className="text-xs text-slate-400">Dynamic per-hectare quoting & automated cloud ingestion</p>
             </div>
           </div>
-          <button onClick={handleClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={handleClose} className="text-slate-400 hover:text-slate-50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -129,7 +129,7 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-white">{t.name}</span>
+                  <span className="text-xs font-extrabold text-slate-50">{t.name}</span>
                   <span className="text-xs font-mono font-bold text-emerald-400">
                     {t.base_cost_per_ha === 0 ? 'FREE' : `$${t.base_cost_per_ha}/ha`}
                   </span>
@@ -146,15 +146,15 @@ export const WalletModal: React.FC<WalletModalProps> = ({
           <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 text-xs">
             <div className="flex justify-between text-slate-400">
               <span>Parcel Area:</span>
-              <span className="font-bold text-white">{quote.parcel_area_ha} ha (Billable: {quote.billable_hectares} ha)</span>
+              <span className="font-bold text-slate-50">{quote.parcel_area_ha} ha (Billable: {quote.billable_hectares} ha)</span>
             </div>
             <div className="flex justify-between text-slate-400">
               <span>Raw Provider Cost:</span>
-              <span className="font-mono text-white">${quote.raw_cost_usd}</span>
+              <span className="font-mono text-slate-50">${quote.raw_cost_usd}</span>
             </div>
             <div className="flex justify-between text-slate-400">
               <span>Platform Markup ({(quote.markup_pct * 100).toFixed(0)}%):</span>
-              <span className="font-mono text-white">${(quote.total_cost_usd - quote.raw_cost_usd).toFixed(2)}</span>
+              <span className="font-mono text-slate-50">${(quote.total_cost_usd - quote.raw_cost_usd).toFixed(2)}</span>
             </div>
             <div className="border-t border-slate-800 pt-2 flex justify-between text-sm font-bold">
               <span className="text-slate-200">Total Order Cost:</span>

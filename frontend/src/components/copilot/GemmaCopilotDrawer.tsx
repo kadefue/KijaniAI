@@ -82,7 +82,7 @@ export const GemmaCopilotDrawer: React.FC<GemmaCopilotDrawerProps> = ({
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-extrabold text-white flex items-center gap-1.5">
+            <h3 className="text-sm font-extrabold text-slate-50 flex items-center gap-1.5">
               <span>Gemma 4 Copilot</span>
               <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
                 Ollama Local LLM
@@ -103,7 +103,7 @@ export const GemmaCopilotDrawer: React.FC<GemmaCopilotDrawerProps> = ({
             <span>{language.toUpperCase()}</span>
           </button>
 
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -57,7 +57,7 @@ export const WatchView: React.FC<WatchViewProps> = ({ parcel }) => {
             )}
             <span className="text-xs text-slate-400">Baseline Year: {data?.baseline_year}</span>
           </div>
-          <h2 className="text-xl font-black text-white mt-1">KijaniWatch: Deforestation & Burn Scar Alerts</h2>
+          <h2 className="text-xl font-black text-slate-50 mt-1">KijaniWatch: Deforestation & Burn Scar Alerts</h2>
         </div>
         <span className="text-xs font-bold text-slate-300 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700">
           NBR Status: {data?.burn_severity}
@@ -93,7 +93,7 @@ export const WatchView: React.FC<WatchViewProps> = ({ parcel }) => {
 
       {/* Alerts Table */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-4">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 text-red-400" />
           Active Disturbance & Clearing Alerts
         </h3>
@@ -102,7 +102,7 @@ export const WatchView: React.FC<WatchViewProps> = ({ parcel }) => {
           {(data?.recent_alerts || []).map((alt: any) => (
             <div key={alt.id} className="py-3 flex items-center justify-between text-xs">
               <div className="space-y-0.5">
-                <div className="font-bold text-white flex items-center gap-2">
+                <div className="font-bold text-slate-50 flex items-center gap-2">
                   <span className="font-mono text-slate-400">{alt.id}</span>
                   <span className="text-amber-300 font-bold">{alt.type}</span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">

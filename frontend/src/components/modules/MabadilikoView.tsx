@@ -320,11 +320,11 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
               {data?.system_mode === 'PRODUCTION' ? 'Live Satellite Multi-Temporal Series' : 'Calibrated Historical Decadal Simulator'}
             </span>
             <span className="text-xs text-slate-400">
-              Area: <span className="font-bold text-white">{parcel.area_ha?.toFixed(1)} ha</span> • {parcel.region} ({parcel.ecozone})
+              Area: <span className="font-bold text-slate-50">{parcel.area_ha?.toFixed(1)} ha</span> • {parcel.region} ({parcel.ecozone})
             </span>
           </div>
 
-          <h2 className="text-xl font-extrabold text-white mt-1.5 flex items-center gap-2">
+          <h2 className="text-xl font-extrabold text-slate-50 mt-1.5 flex items-center gap-2">
             <span>Historical Land Cover Change & Decadal AI Diagnosis</span>
           </h2>
           <p className="text-xs text-slate-400">
@@ -466,7 +466,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-xl font-black text-white">
+            <span className="text-xl font-black text-slate-50">
               {net.vegetation_forest?.final_ha?.toLocaleString()} ha
             </span>
             <span
@@ -508,7 +508,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-xl font-black text-white">
+            <span className="text-xl font-black text-slate-50">
               {net.water_sources?.final_ha?.toLocaleString()} ha
             </span>
             <span
@@ -547,7 +547,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-xl font-black text-white">
+            <span className="text-xl font-black text-slate-50">
               {net.built_up_structures?.final_ha?.toLocaleString()} ha
             </span>
             <span className="text-xs font-bold text-amber-400">
@@ -582,7 +582,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-xl font-black text-white">
+            <span className="text-xl font-black text-slate-50">
               {net.bare_soil?.final_ha?.toLocaleString()} ha
             </span>
             <span
@@ -627,7 +627,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
             </button>
 
             <div>
-              <span className="text-xs font-bold text-white block">
+              <span className="text-xs font-bold text-slate-50 block">
                 Timestep: <span className="font-mono text-violet-400 text-sm">{currentStep?.date}</span>
               </span>
               <span className="text-[10px] text-slate-400">
@@ -700,28 +700,28 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <span className="text-slate-300">
-                  Vegetation: <strong className="text-white">{currentStep.classes.vegetation_forest.percentage}%</strong>{' '}
+                  Vegetation: <strong className="text-slate-50">{currentStep.classes.vegetation_forest.percentage}%</strong>{' '}
                   <span className="text-[10px] text-slate-500">({currentStep.classes.vegetation_forest.hectares} ha)</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0" />
                 <span className="text-slate-300">
-                  Water: <strong className="text-white">{currentStep.classes.water_sources.percentage}%</strong>{' '}
+                  Water: <strong className="text-slate-50">{currentStep.classes.water_sources.percentage}%</strong>{' '}
                   <span className="text-[10px] text-slate-500">({currentStep.classes.water_sources.hectares} ha)</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
                 <span className="text-slate-300">
-                  Built-Up: <strong className="text-white">{currentStep.classes.built_up_structures.percentage}%</strong>{' '}
+                  Built-Up: <strong className="text-slate-50">{currentStep.classes.built_up_structures.percentage}%</strong>{' '}
                   <span className="text-[10px] text-slate-500">({currentStep.classes.built_up_structures.hectares} ha)</span>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
                 <span className="text-slate-300">
-                  Bare Soil: <strong className="text-white">{currentStep.classes.bare_soil.percentage}%</strong>{' '}
+                  Bare Soil: <strong className="text-slate-50">{currentStep.classes.bare_soil.percentage}%</strong>{' '}
                   <span className="text-[10px] text-slate-500">({currentStep.classes.bare_soil.hectares} ha)</span>
                 </span>
               </div>
@@ -739,7 +739,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
                 <Sparkles className="w-5 h-5 text-violet-400 animate-pulse" />
               </div>
               <div>
-                <h3 className="text-base font-extrabold text-white">{aiExp.title}</h3>
+                <h3 className="text-base font-extrabold text-slate-50">{aiExp.title}</h3>
                 <span className="text-[10px] text-slate-400">
                   {lang === 'sw' ? 'Ufafanuzi wa Kina wa AI na Satelaiti' : 'AI-Synthesized Decadal Earth Observation Diagnosis'}
                 </span>
@@ -782,7 +782,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
                 {data.key_drivers.map((d: any, idx: number) => (
                   <div key={idx} className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">
+                      <span className="font-bold text-slate-50">
                         {lang === 'sw' ? d.driver_sw || d.driver : d.driver}
                       </span>
                       <span
@@ -811,7 +811,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
         <div className="glass-panel p-5 rounded-2xl border border-slate-700/80 bg-slate-900/80 space-y-3 shadow-xl">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <h3 className="text-sm font-bold text-slate-50 flex items-center gap-1.5">
                 <BarChart3 className="w-4 h-4 text-violet-400" />
                 <span>Land Cover Transition Matrix ({years}-Year Net Conversions)</span>
               </h3>
@@ -857,11 +857,11 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
             <div className="flex items-center gap-2">
               <Compass className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-bold text-white">Tanzania Regional Basin Decadal Benchmarks</h3>
+              <h3 className="text-sm font-bold text-slate-50">Tanzania Regional Basin Decadal Benchmarks</h3>
             </div>
             <button
               onClick={() => setShowBasins(false)}
-              className="text-xs text-slate-400 hover:text-white"
+              className="text-xs text-slate-400 hover:text-slate-50"
             >
               Close &times;
             </button>
@@ -876,7 +876,7 @@ export const MabadilikoView: React.FC<MabadilikoViewProps> = ({ parcel }) => {
               {basinsSummary.map((b: any, idx: number) => (
                 <div key={idx} className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-xs">{b.basin_name}</span>
+                    <span className="font-bold text-slate-50 text-xs">{b.basin_name}</span>
                     <span className="text-[10px] font-mono text-cyan-400">{b.area_ha?.toLocaleString()} ha</span>
                   </div>
                   <p className="text-[11px] text-slate-300 line-clamp-3">

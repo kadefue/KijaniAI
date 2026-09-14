@@ -2,11 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Theme-aware neutral scale (Dark = default, preserves the platform's
+ * original look exactly; Light = new alternate palette). tailwind.config.js
+ * wires the slate color scale straight to these variables, so every existing
+ * "bg-slate", "text-slate" and "border-slate" utility class in the app is
+ * theme-aware automatically, with no per-component edits required.
+ *
+ * Toggle by setting data-theme="light" or data-theme="dark" on <html>
+ * (see src/contexts/ThemeContext.tsx).
+ */
 @layer base {
   :root {
     color-scheme: dark;
+    --slate-50: 248 250 252;
+    --slate-100: 241 245 249;
+    --slate-200: 226 232 240;
+    --slate-300: 203 213 225;
+    --slate-400: 148 163 184;
+    --slate-500: 100 116 139;
+    --slate-600: 71 85 105;
+    --slate-700: 51 65 85;
+    --slate-800: 30 41 59;
+    --slate-850: 23 32 51;
+    --slate-900: 15 23 42;
+    --slate-950: 8 13 26;
   }
-  
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --slate-50: 15 23 42;
+    --slate-100: 15 23 42;
+    --slate-200: 30 41 59;
+    --slate-300: 51 65 85;
+    --slate-400: 71 85 105;
+    --slate-500: 100 116 139;
+    --slate-600: 148 163 184;
+    --slate-700: 203 213 225;
+    --slate-800: 226 232 240;
+    --slate-850: 241 245 249;
+    --slate-900: 255 255 255;
+    --slate-950: 241 245 249;
+  }
+
   body {
     @apply bg-slate-950 text-slate-100 font-sans;
   }
@@ -19,11 +57,11 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgb(var(--slate-900) / 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: rgb(var(--slate-700) / 0.8);
   border-radius: 9999px;
 }
 
@@ -33,16 +71,16 @@
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
+  background: rgb(var(--slate-900) / 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgb(255 255 255 / 0.08);
 }
 
 .glass-panel-subtle {
-  background: rgba(30, 41, 59, 0.4);
+  background: rgb(var(--slate-800) / 0.4);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgb(255 255 255 / 0.05);
 }
 
 /* Status Indicator Glows */

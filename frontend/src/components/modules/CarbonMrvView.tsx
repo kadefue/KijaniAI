@@ -85,7 +85,7 @@ export const CarbonMrvView: React.FC<CarbonMrvViewProps> = ({ parcel }) => {
             )}
             <span className="text-xs text-slate-400">Ecozone: {parcel.ecozone}</span>
           </div>
-          <h2 className="text-xl font-black text-white mt-1">
+          <h2 className="text-xl font-black text-slate-50 mt-1">
             KijaniCarbon: Allometric Carbon MRV & Issuance Engine
           </h2>
           <p className="text-xs text-slate-300 mt-0.5">
@@ -122,7 +122,7 @@ export const CarbonMrvView: React.FC<CarbonMrvViewProps> = ({ parcel }) => {
               Stand AGB updated to {recalibrationResult.recalibrated_agb_tonnes} tonnes.
             </span>
           </div>
-          <span className="font-bold text-white">{recalibrationResult.confidence_boost}</span>
+          <span className="font-bold text-slate-50">{recalibrationResult.confidence_boost}</span>
         </div>
       )}
 
@@ -130,7 +130,7 @@ export const CarbonMrvView: React.FC<CarbonMrvViewProps> = ({ parcel }) => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-panel p-5 rounded-2xl border border-slate-700">
           <div className="text-xs text-slate-400 font-semibold">Total Stand Biomass</div>
-          <div className="text-3xl font-black text-white mt-1">{data?.total_biomass_tonnes.toLocaleString()} <span className="text-sm font-normal text-slate-400">t</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-1">{data?.total_biomass_tonnes.toLocaleString()} <span className="text-sm font-normal text-slate-400">t</span></div>
           <div className="text-[11px] text-slate-400 mt-1">AGB: {data?.agb_tonnes}t • BGB: {data?.bgb_tonnes}t</div>
         </div>
 
@@ -160,7 +160,7 @@ export const CarbonMrvView: React.FC<CarbonMrvViewProps> = ({ parcel }) => {
             <div className="flex items-center gap-2.5">
               <ShieldCheck className="w-6 h-6 text-emerald-400" />
               <div>
-                <h4 className="text-base font-bold text-white">Cryptographic MRV Audit Dossier Issued</h4>
+                <h4 className="text-base font-bold text-slate-50">Cryptographic MRV Audit Dossier Issued</h4>
                 <div className="text-xs text-slate-400 font-mono">Certificate: {certificate.certificate_number}</div>
               </div>
             </div>

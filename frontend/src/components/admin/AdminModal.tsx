@@ -329,11 +329,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-purple-400" />
             <div>
-              <h3 className="text-base font-extrabold text-white">Platform Administration Hub</h3>
+              <h3 className="text-base font-extrabold text-slate-50">Platform Administration Hub</h3>
               <p className="text-xs text-slate-400">Environment controls, satellite provider APIs, dynamic pricing & campaigns</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -444,7 +444,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                 <div className="flex items-center gap-2">
                   <Globe className="w-5 h-5 text-purple-400 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-white">Satellite Databases & Multi-Tier Provider Ingestion</h4>
+                    <h4 className="text-xs font-bold text-slate-50">Satellite Databases & Multi-Tier Provider Ingestion</h4>
                     <p className="text-[11px] text-slate-300">
                       Configure upstream commercial & open-access Earth Observation APIs. Test live STAC/Order endpoints directly from KijaniAI.
                     </p>
@@ -466,7 +466,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                   <div>
                     <div className="flex items-center gap-2">
                       <Cpu className="w-5 h-5 text-purple-400" />
-                      <h4 className="text-sm font-bold text-white tracking-wide">
+                      <h4 className="text-sm font-bold text-slate-50 tracking-wide">
                         Free-Tier Earth Observation & Planetary Compute (Tier 1)
                       </h4>
                       <span className="text-[11px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
@@ -500,7 +500,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <Cpu className="w-4 h-4 text-purple-400" />
-                        <span className="text-xs font-bold text-white">Google Earth Engine</span>
+                        <span className="text-xs font-bold text-slate-50">Google Earth Engine</span>
                       </div>
                       {activeFreeProvider === 'GEE' && (
                         <span className="p-0.5 rounded-full bg-purple-500 text-slate-950">
@@ -528,7 +528,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <Globe className="w-4 h-4 text-blue-400" />
-                        <span className="text-xs font-bold text-white">Planetary Computer</span>
+                        <span className="text-xs font-bold text-slate-50">Planetary Computer</span>
                       </div>
                       {activeFreeProvider === 'PLANETARY_COMPUTER' && (
                         <span className="p-0.5 rounded-full bg-purple-500 text-slate-950">
@@ -556,7 +556,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <Layers className="w-4 h-4 text-emerald-400" />
-                        <span className="text-xs font-bold text-white">Copernicus (CDSE)</span>
+                        <span className="text-xs font-bold text-slate-50">Copernicus (CDSE)</span>
                       </div>
                       {activeFreeProvider === 'CDSE' && (
                         <span className="p-0.5 rounded-full bg-purple-500 text-slate-950">
@@ -578,7 +578,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Cpu className="w-4 h-4 text-purple-400" />
-                      <span className="text-xs font-bold text-white">Google Earth Engine Project & Credentials</span>
+                      <span className="text-xs font-bold text-slate-50">Google Earth Engine Project & Credentials</span>
                     </div>
                     <span className="text-[11px] font-mono text-purple-300">
                       {freeTierSettings?.gee_status?.status_message || 'Calibrated server-side compute ready'}
@@ -641,7 +641,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
                     <div className="flex items-center gap-2">
                       <CloudRain className="w-4 h-4 text-cyan-400" />
-                      <span className="text-xs font-bold text-white">CHIRPS Daily Rainfall Engine</span>
+                      <span className="text-xs font-bold text-slate-50">CHIRPS Daily Rainfall Engine</span>
                     </div>
                     <div className="text-[11px] text-slate-300 font-mono">
                       Dataset: UCSB-CHG/CHIRPS/DAILY (0.05° ~5.3 km)
@@ -661,7 +661,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-400" />
-                        <span className="text-xs font-bold text-white">OpenWeatherMap 72h Forecast</span>
+                        <span className="text-xs font-bold text-slate-50">OpenWeatherMap 72h Forecast</span>
                       </div>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800">
                         Forecast Gating
@@ -759,7 +759,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                             <span className="text-xs font-extrabold uppercase px-2 py-0.5 rounded bg-purple-900/60 border border-purple-700 text-purple-200">
                               {cfg.tier_id}
                             </span>
-                            <h5 className="text-sm font-bold text-white">{cfg.provider_name}</h5>
+                            <h5 className="text-sm font-bold text-slate-50">{cfg.provider_name}</h5>
                           </div>
                           <p className="text-[11px] text-slate-400 mt-1">{cfg.resolution_label}</p>
                         </div>
@@ -854,7 +854,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                                   [cfg.id]: { ...prev[cfg.id], showKey: !form.showKey },
                                 }))
                               }
-                              className="absolute right-2 top-2 text-slate-400 hover:text-white transition"
+                              className="absolute right-2 top-2 text-slate-400 hover:text-slate-50 transition"
                             >
                               {form.showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                             </button>
@@ -895,7 +895,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                                   [cfg.id]: { ...prev[cfg.id], showSecret: !form.showSecret },
                                 }))
                               }
-                              className="absolute right-2 top-2 text-slate-400 hover:text-white transition"
+                              className="absolute right-2 top-2 text-slate-400 hover:text-slate-50 transition"
                             >
                               {form.showSecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                             </button>
@@ -979,7 +979,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                 {tiers.map((t) => (
                   <div key={t.id} className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                      <div className="text-sm font-bold text-white">{t.name}</div>
+                      <div className="text-sm font-bold text-slate-50">{t.name}</div>
                       <div className="text-xs text-slate-400">{t.sensors} • {t.resolution_label}</div>
                     </div>
 
@@ -1038,7 +1038,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     <span className="text-xs font-bold text-purple-300">Replaying Session: {selectedSessionId}</span>
                     <button
                       onClick={() => setSelectedSessionId(null)}
-                      className="text-xs text-slate-400 hover:text-white"
+                      className="text-xs text-slate-400 hover:text-slate-50"
                     >
                       Close Player
                     </button>
@@ -1051,7 +1051,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                 {sessions.map((sess) => (
                   <div key={sess.id} className="p-3 flex items-center justify-between text-xs">
                     <div>
-                      <div className="font-bold text-white flex items-center gap-2">
+                      <div className="font-bold text-slate-50 flex items-center gap-2">
                         <span>{sess.user_email}</span>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-mono">
                           {sess.abandoned_step}
@@ -1087,7 +1087,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                   <div key={camp.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-bold text-white">{camp.user_email}</span>
+                        <span className="text-xs font-bold text-slate-50">{camp.user_email}</span>
                         <div className="text-[11px] text-slate-400">{camp.friction_summary}</div>
                       </div>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${camp.status === 'SENT' ? 'bg-emerald-950 text-emerald-300' : 'bg-yellow-950 text-yellow-300'}`}>
@@ -1096,7 +1096,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onSyste
                     </div>
 
                     <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs space-y-1">
-                      <div className="text-slate-400 font-semibold">Subject: <span className="text-white">{camp.suggested_email_subject}</span></div>
+                      <div className="text-slate-400 font-semibold">Subject: <span className="text-slate-50">{camp.suggested_email_subject}</span></div>
                       <div className="text-slate-300 whitespace-pre-wrap pt-1 font-sans text-[11px] leading-relaxed">
                         {camp.suggested_email_body}
                       </div>

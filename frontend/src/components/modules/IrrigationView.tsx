@@ -217,7 +217,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         <div className="flex items-center gap-3 shrink-0">
           <div className="text-right">
             <div className="text-xs text-slate-400">Decadal CWRI Score</div>
-            <div className="text-2xl font-black text-white">{status?.cwri_decadal.toFixed(1)}%</div>
+            <div className="text-2xl font-black text-slate-50">{status?.cwri_decadal.toFixed(1)}%</div>
           </div>
           <div className="h-10 w-px bg-slate-700/60" />
           <div className="text-right">
@@ -233,7 +233,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="glass-panel p-4 rounded-xl space-y-1">
           <div className="text-xs font-semibold text-slate-400">Net Water Deficit</div>
-          <div className="text-xl font-bold text-white">{status?.net_irrigation_req_mm.toFixed(1)} mm</div>
+          <div className="text-xl font-bold text-slate-50">{status?.net_irrigation_req_mm.toFixed(1)} mm</div>
           <div className="text-[11px] text-slate-400">Depletion above RAW</div>
         </div>
 
@@ -282,7 +282,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
               <Cpu className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-white flex items-center gap-2">
+              <div className="text-xs font-bold text-slate-50 flex items-center gap-2">
                 <span>Planetary Compute:</span>
                 <span className="text-purple-300 font-mono">
                   {freeTierSettings?.active_provider === 'GEE' ? 'Google Earth Engine (Server-Side)' : (freeTierSettings?.active_provider || 'Google Earth Engine')}
@@ -336,7 +336,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
               {weatherForecast.daily_forecasts.map((df) => (
                 <div key={df.date} className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1 text-center">
                   <div className="text-[11px] font-semibold text-slate-300 font-mono">{df.date.slice(5)}</div>
-                  <div className="text-xs font-bold text-white flex items-center justify-center gap-1">
+                  <div className="text-xs font-bold text-slate-50 flex items-center justify-center gap-1">
                     <Thermometer className="w-3 h-3 text-amber-400" />
                     <span>{df.temp_max_c.toFixed(0)}° / {df.temp_min_c.toFixed(0)}°C</span>
                   </div>
@@ -359,7 +359,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
               <Layers className="w-5 h-5 text-amber-400" />
-              <h3 className="text-sm font-bold text-white tracking-wide">
+              <h3 className="text-sm font-bold text-slate-50 tracking-wide">
                 Soil Hydraulic Profile & Root-Zone Moisture Limits
               </h3>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
@@ -391,7 +391,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
           <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 space-y-1">
             <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Texture & Fractions</div>
-            <div className="text-sm font-bold text-white truncate">{soilProfile?.texture_class || 'Sandy Clay Loam'}</div>
+            <div className="text-sm font-bold text-slate-50 truncate">{soilProfile?.texture_class || 'Sandy Clay Loam'}</div>
             <div className="text-[11px] text-slate-400 flex items-center gap-2 font-mono">
               <span>S: {soilProfile?.sand_pct ?? 50}%</span>
               <span>•</span>
@@ -450,7 +450,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         {/* 14-Day Water Balance: St vs FC and PWP */}
         <div className="glass-panel p-5 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
               Dynamic Root-Zone Water Balance (14 Days)
             </h3>
@@ -484,7 +484,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         {/* Daily Evapotranspiration: ET0 vs ETc vs ETa */}
         <div className="glass-panel p-5 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
               <Gauge className="w-4 h-4 text-emerald-400" />
               Daily Evapotranspiration Flux (ET₀ vs. ET_c vs. ET_a)
             </h3>
@@ -516,7 +516,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         <div className="lg:col-span-2 glass-panel p-5 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white">Decadal Crop Water Requirements Index (CWRI)</h3>
+              <h3 className="text-sm font-bold text-slate-50">Decadal Crop Water Requirements Index (CWRI)</h3>
               <p className="text-xs text-slate-400">10-day step cumulative satisfaction index & failure risk</p>
             </div>
             <span className="text-xs font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
@@ -541,7 +541,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
         {/* Log Applied Water Action Console */}
         <div className="glass-panel p-5 rounded-2xl space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
               <Droplets className="w-4 h-4 text-emerald-400" />
               Log Field Irrigation Event
             </h3>
@@ -593,12 +593,12 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Sliders className="w-5 h-5 text-amber-400" />
-                  <h2 className="text-base font-bold text-white tracking-wide">
+                  <h2 className="text-base font-bold text-slate-50 tracking-wide">
                     Configure Soil Profile & Moisture Retention
                   </h2>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Select a calibrated agro-pedological profile for East Africa or define custom hydraulic boundaries for <span className="text-white font-semibold">{parcel.name}</span>.
+                  Select a calibrated agro-pedological profile for East Africa or define custom hydraulic boundaries for <span className="text-slate-50 font-semibold">{parcel.name}</span>.
                 </p>
               </div>
 
@@ -619,7 +619,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
                 className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition ${
                   soilMode === 'predefined'
                     ? 'bg-amber-500 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-400 hover:text-slate-50'
                 }`}
               >
                 <Layers className="w-4 h-4" />
@@ -631,7 +631,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
                 className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition ${
                   soilMode === 'custom'
                     ? 'bg-amber-500 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-400 hover:text-slate-50'
                 }`}
               >
                 <Settings2 className="w-4 h-4" />
@@ -657,7 +657,7 @@ export const IrrigationView: React.FC<IrrigationViewProps> = ({ parcel }) => {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="space-y-1">
-                            <div className="text-sm font-bold text-white flex items-center gap-2">
+                            <div className="text-sm font-bold text-slate-50 flex items-center gap-2">
                               <span>{preset.texture_class}</span>
                               {isSelected && (
                                 <span className="p-0.5 rounded-full bg-amber-500 text-slate-950">

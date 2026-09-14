@@ -132,7 +132,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">
+                <h2 className="text-lg font-bold text-slate-50 tracking-tight">
                   Tanzania Forest Reserves (PostGIS Database)
                 </h2>
                 <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-600/40">
@@ -173,7 +173,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
               </div>
               <div>
                 <span className="text-slate-400 block text-[11px]">Total Gazetted Reserves</span>
-                <span className="font-extrabold text-white text-sm">
+                <span className="font-extrabold text-slate-50 text-sm">
                   {catalog.total_forest_reserves?.toLocaleString()} Units
                 </span>
               </div>
@@ -229,7 +229,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                 setSearch(e.target.value);
                 setPage(0);
               }}
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
@@ -241,7 +241,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                 setDesignation(e.target.value);
                 setPage(0);
               }}
-              className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <option value="all">All Designations (696)</option>
               <option value="Nature Forest Reserve">Nature Forest Reserves (Strict)</option>
@@ -255,7 +255,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                 setIucnCategory(e.target.value);
                 setPage(0);
               }}
-              className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <option value="all">All IUCN Categories</option>
               <option value="Ib">IUCN Ib (Wilderness Area)</option>
@@ -268,7 +268,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
 
           <div className="text-xs text-slate-400 ml-auto">
             Showing <span className="font-bold text-emerald-400">{reserves.length}</span> of{' '}
-            <span className="font-bold text-white">{totalCount}</span> reserves
+            <span className="font-bold text-slate-50">{totalCount}</span> reserves
           </div>
         </div>
 
@@ -322,7 +322,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-white text-sm">{r.name}</span>
+                        <span className="font-bold text-slate-50 text-sm">{r.name}</span>
                         <span
                           className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${
                             isNature
@@ -416,8 +416,8 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                   &larr; Previous
                 </button>
                 <span>
-                  Page <span className="font-bold text-white">{page + 1}</span> of{' '}
-                  <span className="font-bold text-white">
+                  Page <span className="font-bold text-slate-50">{page + 1}</span> of{' '}
+                  <span className="font-bold text-slate-50">
                     {Math.ceil(totalCount / pageSize)}
                   </span>
                 </span>
@@ -444,7 +444,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                     </span>
                     <span className="text-xs text-slate-500 font-mono">WDPA #{selectedReserve.wdpa_id}</span>
                   </div>
-                  <h3 className="text-base font-extrabold text-white">{selectedReserve.name}</h3>
+                  <h3 className="text-base font-extrabold text-slate-50">{selectedReserve.name}</h3>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Authority: {selectedReserve.management_authority || 'Tanzania Forest Services (TFS)'}
                   </p>
@@ -454,7 +454,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
                     <span className="text-[11px] text-slate-400 block">Total Area</span>
-                    <span className="font-bold text-white">
+                    <span className="font-bold text-slate-50">
                       {selectedReserve.area_ha?.toLocaleString()} ha
                     </span>
                     <span className="text-[10px] text-slate-500 block">
@@ -574,7 +574,7 @@ export const ForestReservesModal: React.FC<ForestReservesModalProps> = ({
                             <ShieldCheck className="w-4 h-4 text-emerald-400" />
                           )}
                           <div>
-                            <span className="font-bold text-white block">
+                            <span className="font-bold text-slate-50 block">
                               {landCoverData.deforestation_disturbances?.detected_count > 0
                                 ? `${landCoverData.deforestation_disturbances.detected_count} Disturbance Alerts`
                                 : 'No Active Disturbances'}

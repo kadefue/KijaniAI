@@ -198,9 +198,9 @@ export const DropzoneModal: React.FC<DropzoneModalProps> = ({ isOpen, onClose, o
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <FileUp className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-base font-extrabold text-white">Import Geospatial Boundary</h3>
+            <h3 className="text-base font-extrabold text-slate-50">Import Geospatial Boundary</h3>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -362,7 +362,7 @@ export const DropzoneModal: React.FC<DropzoneModalProps> = ({ isOpen, onClose, o
           <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 space-y-2.5">
             <div className="flex items-center justify-between">
               <div>
-                <label className="text-xs font-bold text-white block">Soil Profile & Moisture Buffer</label>
+                <label className="text-xs font-bold text-slate-50 block">Soil Profile & Moisture Buffer</label>
                 <span className="text-[11px] text-slate-400">Calibrate Field Capacity & Root-Zone Storage</span>
               </div>
               <div className="flex items-center rounded-lg bg-slate-900 p-0.5 border border-slate-700">

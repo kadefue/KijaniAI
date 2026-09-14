@@ -107,7 +107,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-50 tracking-tight">
                   KijaniAI User Manual & Playbook
                 </h2>
                 <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
@@ -188,12 +188,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 1: FARMERS & SCHEME MANAGERS */}
           {activeRole === 'farmer' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-teal-950/60 border border-emerald-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/60 via-gray-900 to-teal-950/60 border border-emerald-700/40">
                 <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm mb-1">
                   <Sprout className="w-4 h-4" />
                   <span>Agronomic Water Intelligence & Scheduling (FAO-56 Penman-Monteith)</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   KijaniAI transforms raw satellite NDVI and micro-meteorological variables into actionable daily irrigation pumping hours, protecting crops against water stress while saving diesel fuel, electricity, and pumping wear.
                 </p>
               </div>
@@ -204,7 +204,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
                   <div className="w-7 h-7 rounded-lg bg-emerald-600/30 text-emerald-400 font-bold flex items-center justify-center text-xs">
                     1
                   </div>
-                  <h4 className="text-sm font-bold text-white">Import Your Boundary</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Import Your Boundary</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Upload a Shapefile (<code className="text-emerald-400">.zip</code>), KMZ, or CSV of your farm. Alternatively, use the <strong>1-Click Tanzania 2022 Census Ward selector</strong> (e.g. Mlandizi, Kidatu, Mazimbu) to auto-load official geometries.
                   </p>
@@ -214,7 +214,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
                   <div className="w-7 h-7 rounded-lg bg-teal-600/30 text-teal-400 font-bold flex items-center justify-center text-xs">
                     2
                   </div>
-                  <h4 className="text-sm font-bold text-white">Configure Soil & Irrigation</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Configure Soil & Irrigation</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Select your soil type preset (Sandy Clay Loam, Clay Mbuga, Loam) or enter custom hydraulic properties. Set your irrigation system efficiency (Drip 90%, Sprinkler 75%, Pivot 82%, Furrow 55%).
                   </p>
@@ -224,7 +224,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
                   <div className="w-7 h-7 rounded-lg bg-cyan-600/30 text-cyan-400 font-bold flex items-center justify-center text-xs">
                     3
                   </div>
-                  <h4 className="text-sm font-bold text-white">Check Pumping Schedule</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Check Pumping Schedule</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Read the exact <strong>Gross Irrigation Requirement (GIR)</strong>, required water volume (<code className="text-cyan-400">m³</code>), and pump runtime duration. Always verify the 72h forecast alert before starting pumps!
                   </p>
@@ -263,12 +263,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 2: SYSTEM ADMINISTRATORS */}
           {activeRole === 'admin' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-purple-950/60 border border-indigo-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/60 via-gray-900 to-purple-950/60 border border-indigo-700/40">
                 <div className="flex items-center gap-2 text-indigo-300 font-bold text-sm mb-1">
                   <ShieldCheck className="w-4 h-4" />
                   <span>Platform Operations, Operational Modes & Commercial Satellite APIs</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   Manage platform-wide settings including Testing vs Production mode switches, free-tier GEE reductions, commercial Planet/UP42 API keys, $/ha pricing configurations, and behavioral session replays.
                 </p>
               </div>
@@ -282,7 +282,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
                     </span>
                     <span className="text-xs text-slate-400">Recommended for Demos</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white">High-Fidelity Simulated Models</h4>
+                  <h4 className="text-sm font-bold text-slate-50">High-Fidelity Simulated Models</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Uses calibrated ecozone simulators to generate realistic tree crown bounding boxes, water index regressions, and satellite catalogs. Does not require GPU infrastructure or consume commercial API credits.
                   </p>
@@ -295,7 +295,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
                     </span>
                     <span className="text-xs text-slate-400">Operational Real AI</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white">Live DeepForest & STAC Orders</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Live DeepForest & STAC Orders</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Loads operational PyTorch RetinaNet weights for sub-meter tree crown segmentation. Dispatches live queries to Google Earth Engine, Planet Orders v2, and UP42 STAC catalogs.
                   </p>
@@ -330,12 +330,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 3: CARBON & MRV AUDITORS */}
           {activeRole === 'carbon' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-orange-950/60 border border-amber-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/60 via-gray-900 to-orange-950/60 border border-amber-700/40">
                 <div className="flex items-center gap-2 text-amber-300 font-bold text-sm mb-1">
                   <TreePine className="w-4 h-4" />
                   <span>Verra VM0042 & Plan Vivo Automated Carbon MRV Engine</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   Converts sub-meter satellite tree crown segmentation directly into stand-level Above-Ground Biomass (AGB), applies regional East African allometric models, withholds a 15% non-permanence risk buffer, and issues cryptographically signed PDF audit dossiers.
                 </p>
               </div>
@@ -372,12 +372,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 4: WATER MANAGERS & HYDROLOGISTS */}
           {activeRole === 'water' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-950/60 via-slate-900 to-blue-950/60 border border-cyan-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-950/60 via-gray-900 to-blue-950/60 border border-cyan-700/40">
                 <div className="flex items-center gap-2 text-cyan-300 font-bold text-sm mb-1">
                   <Droplets className="w-4 h-4" />
                   <span>KijaniMaji: Remote Sensing Water Quality Calibrated for Tanzanian Reservoirs</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   Calibrated against validated empirical regression models from Mindu Reservoir in Morogoro, Tanzania. Uses dynamic MNDWI water masking to eliminate land noise and measures TSS, Turbidity, pH, and Electrical Conductivity.
                 </p>
               </div>
@@ -425,7 +425,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
               {/* 1-Click Extraction */}
               <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white">Export Georeferenced Point Dataset</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Export Georeferenced Point Dataset</h4>
                   <p className="text-xs text-slate-400">Download geocoded point CSV with exact GPS coordinates and computed values across the reservoir.</p>
                 </div>
                 <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-700/50">
@@ -438,12 +438,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 5: FIELD RANGERS & EXTENSION */}
           {activeRole === 'ranger' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-teal-950/60 via-slate-900 to-emerald-950/60 border border-teal-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-teal-950/60 via-gray-900 to-emerald-950/60 border border-teal-700/40">
                 <div className="flex items-center gap-2 text-teal-300 font-bold text-sm mb-1">
                   <Smartphone className="w-4 h-4" />
                   <span>KijaniSync: Offline-First Ground Truthing & On-Device Edge Camera AI</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   Operate in remote Tanzanian forest reserves, river catchments, and off-grid farms with zero cellular connection. Data is stored securely in IndexedDB and synchronized upon return to coverage.
                 </p>
               </div>
@@ -469,12 +469,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 6: MABADILIKOAI & EMAIL NOTIFICATIONS */}
           {activeRole === 'mabadiliko' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-violet-950/60 via-slate-900 to-purple-950/60 border border-violet-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-violet-950/60 via-gray-900 to-purple-950/60 border border-violet-700/40">
                 <div className="flex items-center gap-2 text-violet-300 font-bold text-sm mb-1">
                   <History className="w-4 h-4" />
                   <span>MabadilikoAI: Multi-Temporal Land Cover Change Dynamics</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   Answers "what changed, and why?" for any parcel or custom boundary over a historical window of up to 10 years, sampled monthly through annually, with a bilingual AI-generated narrative explaining the likely drivers.
                 </p>
               </div>
@@ -483,14 +483,14 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-2">
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-violet-900 text-violet-300">Instant Mode</span>
-                  <h4 className="text-sm font-bold text-white">Fast Results for Registered Parcels</h4>
+                  <h4 className="text-sm font-bold text-slate-50">Fast Results for Registered Parcels</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Select a parcel or draw a custom boundary in the MabadilikoAI tab, pick your time horizon and interval, and click <strong>Run Analysis</strong>. Results return in seconds — ideal for quick checks.
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-2">
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-900 text-purple-300">Background Job Mode</span>
-                  <h4 className="text-sm font-bold text-white">For Large Boundaries or Long Horizons</h4>
+                  <h4 className="text-sm font-bold text-slate-50">For Large Boundaries or Long Horizons</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Submit as a background job (e.g. for an entire district or forest reserve). Optionally enter an email address — you can close the tab and the platform emails you the moment it finishes.
                   </p>
@@ -530,12 +530,12 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
           {/* TAB 7: SWAHILI GUIDE */}
           {activeRole === 'swahili' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-rose-950/60 via-slate-900 to-pink-950/60 border border-rose-700/40">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-rose-950/60 via-gray-900 to-pink-950/60 border border-rose-700/40">
                 <div className="flex items-center gap-2 text-rose-300 font-bold text-sm mb-1">
                   <Globe className="w-4 h-4" />
                   <span>Mwongozo wa Kiswahili Sanifu (KijaniAI kwa Lugha ya Taifa)</span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-gray-300 leading-relaxed">
                   KijaniAI inatoa huduma kamili kwa Kiswahili kupitia msaidizi wa akili mnemba (Gemma 4 Copilot) pamoja na mfumo wa taarifa za kilimo, umwagiliaji, na hewa ya ukaa.
                 </p>
               </div>
@@ -562,7 +562,7 @@ export const UserManualModal: React.FC<UserManualModalProps> = ({
 
               {/* Sample Prompts in Swahili */}
               <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50 space-y-2">
-                <h5 className="text-xs font-bold text-white uppercase tracking-wider">Mifano ya Maswali ya Kumuuliza Gemma 4 Copilot:</h5>
+                <h5 className="text-xs font-bold text-slate-50 uppercase tracking-wider">Mifano ya Maswali ya Kumuuliza Gemma 4 Copilot:</h5>
                 <ul className="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
                   <li><em>"Je, ninaweza kuanza kumwagilia mahindi leo Mlandizi au mvua inatarajiwa?"</em></li>
                   <li><em>"Mbona kiwango cha unyevu kwenye udongo kimeshuka sana wiki hii?"</em></li>

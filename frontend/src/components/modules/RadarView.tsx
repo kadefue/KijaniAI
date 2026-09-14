@@ -44,7 +44,7 @@ export const RadarView: React.FC<RadarViewProps> = ({ parcel }) => {
           <Radio className="w-6 h-6 text-amber-400 animate-pulse shrink-0" />
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-extrabold text-white">Sentinel-1 C-Band SAR Active Microwave</h3>
+              <h3 className="text-base font-extrabold text-slate-50">Sentinel-1 C-Band SAR Active Microwave</h3>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-900 text-amber-200">
                 100% Cloud Penetration
               </span>
@@ -81,13 +81,13 @@ export const RadarView: React.FC<RadarViewProps> = ({ parcel }) => {
 
         <div className="glass-panel p-5 rounded-2xl border border-slate-700">
           <div className="text-xs text-slate-400 font-semibold">VV Backscatter</div>
-          <div className="text-3xl font-black text-white mt-1">{data?.sigma0_vv_mean_db} <span className="text-sm text-slate-400 font-normal">dB</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-1">{data?.sigma0_vv_mean_db} <span className="text-sm text-slate-400 font-normal">dB</span></div>
           <div className="text-[11px] text-slate-400 mt-1">Vertical Copolarized</div>
         </div>
 
         <div className="glass-panel p-5 rounded-2xl border border-slate-700">
           <div className="text-xs text-slate-400 font-semibold">VH Cross-Polarization</div>
-          <div className="text-3xl font-black text-white mt-1">{data?.sigma0_vh_mean_db} <span className="text-sm text-slate-400 font-normal">dB</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-1">{data?.sigma0_vh_mean_db} <span className="text-sm text-slate-400 font-normal">dB</span></div>
           <div className="text-[11px] text-slate-400 mt-1">Canopy Volume Scattering</div>
         </div>
 
@@ -100,7 +100,7 @@ export const RadarView: React.FC<RadarViewProps> = ({ parcel }) => {
 
       {/* SAR Timeseries */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-4">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
           <Activity className="w-4 h-4 text-amber-400" />
           Uninterrupted SAR Backscatter Trajectory (12-Day Orbit Repeat)
         </h3>

@@ -118,7 +118,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
             )}
             <span className="text-xs text-slate-400">Sentinel-2 BOA Reflectance</span>
           </div>
-          <h2 className="text-xl font-black text-white mt-1">
+          <h2 className="text-xl font-black text-slate-50 mt-1">
             KijaniMaji: Remote Sensing Water Quality & Clogging Diagnostics
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -148,7 +148,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
           }`}
         >
           <div className="text-xs text-slate-400 font-medium">Total Suspended Solids (TSS)</div>
-          <div className="text-2xl font-black text-white mt-1">{data.mean_tss_mg_l.toFixed(1)} mg/L</div>
+          <div className="text-2xl font-black text-slate-50 mt-1">{data.mean_tss_mg_l.toFixed(1)} mg/L</div>
           <div className="text-[11px] text-slate-400 mt-1 font-mono">y = 0.8046x + 5.5561</div>
         </button>
 
@@ -162,7 +162,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
           }`}
         >
           <div className="text-xs text-slate-400 font-medium">Turbidity</div>
-          <div className="text-2xl font-black text-white mt-1">{data.mean_turbidity_ntu.toFixed(1)} NTU</div>
+          <div className="text-2xl font-black text-slate-50 mt-1">{data.mean_turbidity_ntu.toFixed(1)} NTU</div>
           <div className="text-[11px] text-slate-400 mt-1 font-mono">y = 0.7214x + 16.255</div>
         </button>
 
@@ -176,7 +176,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
           }`}
         >
           <div className="text-xs text-slate-400 font-medium">potential of Hydrogen (pH)</div>
-          <div className="text-2xl font-black text-white mt-1">{data.mean_ph.toFixed(2)}</div>
+          <div className="text-2xl font-black text-slate-50 mt-1">{data.mean_ph.toFixed(2)}</div>
           <div className="text-[11px] text-slate-400 mt-1 font-mono">y = 0.7394x + 2.1609</div>
         </button>
 
@@ -190,7 +190,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
           }`}
         >
           <div className="text-xs text-slate-400 font-medium">Electrical Conductivity (EC)</div>
-          <div className="text-2xl font-black text-white mt-1">{data.mean_ec_ms_cm.toFixed(3)} mS/cm</div>
+          <div className="text-2xl font-black text-slate-50 mt-1">{data.mean_ec_ms_cm.toFixed(3)} mS/cm</div>
           <div className="text-[11px] text-slate-400 mt-1 font-mono">y = 0.6835x + 0.0587</div>
         </button>
       </div>
@@ -200,7 +200,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
         {/* FAO Drip Clogging Hazards */}
         <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
+            <h4 className="text-sm font-bold text-slate-50 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               FAO / Ayers & Westcot Irrigation Clogging Assessment
             </h4>
@@ -212,13 +212,13 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
           <div className="space-y-2 text-xs">
             <div className="flex justify-between p-2 rounded-lg bg-slate-800/60">
               <span className="text-slate-400">Suspended Solids Risk:</span>
-              <span className="font-bold text-white">
+              <span className="font-bold text-slate-50">
                 {data.mean_tss_mg_l > 100 ? 'Severe (>100 mg/L)' : (data.mean_tss_mg_l >= 50 ? 'Moderate (50-100 mg/L)' : 'None (<50 mg/L)')}
               </span>
             </div>
             <div className="flex justify-between p-2 rounded-lg bg-slate-800/60">
               <span className="text-slate-400">Alkaline Precipitation Risk (pH):</span>
-              <span className="font-bold text-white">
+              <span className="font-bold text-slate-50">
                 {data.mean_ph > 8.0 ? 'High Carbonate Precipitate' : (data.mean_ph >= 7.0 ? 'Moderate' : 'Normal')}
               </span>
             </div>
@@ -231,7 +231,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
         {/* WHO / Tanzania Drinking Standards */}
         <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
+            <h4 className="text-sm font-bold text-slate-50 flex items-center gap-2">
               <Info className="w-4 h-4 text-sky-400" />
               WHO & Tanzania National Drinking Standards
             </h4>
@@ -265,7 +265,7 @@ export const MajiWaterView: React.FC<MajiWaterViewProps> = ({ parcel }) => {
 
       {/* Historical Monthly Timeseries Chart */}
       <div className="glass-panel p-5 rounded-2xl space-y-4">
-        <h3 className="text-sm font-bold text-white">
+        <h3 className="text-sm font-bold text-slate-50">
           Mindu Reservoir Seasonal Sediment & Turbidity Dynamics (12-Month Composite)
         </h3>
 

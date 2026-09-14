@@ -191,7 +191,7 @@ export const App: React.FC = () => {
                 {activeTab === 'mabadiliko' && <MabadilikoView parcel={selectedParcel} />}
                 {activeTab === 'sync' && (
                   <div className="p-8 text-center space-y-4">
-                    <h3 className="text-base font-bold text-white">KijaniSync Offline PWA Engine</h3>
+                    <h3 className="text-base font-bold text-slate-50">KijaniSync Offline PWA Engine</h3>
                     <p className="text-xs text-slate-400 max-w-md mx-auto">
                       Use the KijaniSync button in the top navigation or click below to launch the offline on-device camera tree inspection modal.
                     </p>

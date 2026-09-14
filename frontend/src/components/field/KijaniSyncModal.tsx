@@ -105,11 +105,11 @@ export const KijaniSyncModal: React.FC<KijaniSyncModalProps> = ({ isOpen, onClos
           <div className="flex items-center gap-2">
             <Smartphone className="w-5 h-5 text-blue-400" />
             <div>
-              <h3 className="text-base font-extrabold text-white">KijaniSync: Offline Field Ground-Truthing</h3>
+              <h3 className="text-base font-extrabold text-slate-50">KijaniSync: Offline Field Ground-Truthing</h3>
               <p className="text-xs text-slate-400">IndexedDB persistence & on-device edge computer vision</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-50 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -130,11 +130,11 @@ export const KijaniSyncModal: React.FC<KijaniSyncModalProps> = ({ isOpen, onClos
                 </div>
                 <div>
                   <span className="text-slate-400">Estimated DBH:</span>
-                  <div className="font-bold text-white">{estimatedDbh} cm</div>
+                  <div className="font-bold text-slate-50">{estimatedDbh} cm</div>
                 </div>
                 <div>
                   <span className="text-slate-400">Height:</span>
-                  <div className="font-bold text-white">{estimatedHeight} m</div>
+                  <div className="font-bold text-slate-50">{estimatedHeight} m</div>
                 </div>
               </div>
               <div className="flex justify-center gap-3">
@@ -201,7 +201,7 @@ export const KijaniSyncModal: React.FC<KijaniSyncModalProps> = ({ isOpen, onClos
             {(observations || []).map((obs, idx) => (
               <div key={idx} className="p-2.5 flex items-center justify-between text-xs">
                 <div>
-                  <div className="font-bold text-white">{obs.species_identified}</div>
+                  <div className="font-bold text-slate-50">{obs.species_identified}</div>
                   <div className="text-[11px] text-slate-400">DBH: {obs.measured_dbh_cm} cm • Height: {obs.measured_height_m} m</div>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${obs.synced ? 'bg-slate-800 text-slate-400' : 'bg-blue-950 text-blue-300'}`}>

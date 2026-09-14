@@ -499,7 +499,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
               onClick={() => setCurrentLayer(layer.id)}
               className={`text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all ${
                 currentLayer === layer.id
-                  ? `${layer.color} text-white shadow-md ring-1 ring-white/30`
+                  ? `${layer.color} text-slate-50 shadow-md ring-1 ring-white/30`
                   : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
               }`}
             >
@@ -657,7 +657,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       {/* Parcel Coordinate & Scale Legend Footer */}
       {parcel && (
         <div className="absolute bottom-4 left-4 z-10 glass-panel rounded-lg px-3 py-1.5 text-[11px] text-slate-300 flex items-center gap-3 border border-slate-700/80 bg-slate-900/90 backdrop-blur-md">
-          <span className="font-bold text-white">{parcel.name}</span>
+          <span className="font-bold text-slate-50">{parcel.name}</span>
           <span className="text-slate-400">•</span>
           <span>{parcel.area_ha.toFixed(1)} ha</span>
           <span className="text-slate-400">•</span>

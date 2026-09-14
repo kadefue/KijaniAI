@@ -79,14 +79,14 @@ export const RestoreView: React.FC<RestoreViewProps> = ({ parcel }) => {
 
         <div className="glass-panel p-5 rounded-2xl border border-slate-700">
           <div className="text-xs text-slate-400 font-semibold">Stand Age</div>
-          <div className="text-3xl font-black text-white mt-1">{data?.stand_age_years} <span className="text-sm font-normal text-slate-400">years</span></div>
+          <div className="text-3xl font-black text-slate-50 mt-1">{data?.stand_age_years} <span className="text-sm font-normal text-slate-400">years</span></div>
           <div className="text-[11px] text-slate-400 mt-1">Active Monitoring Cohort</div>
         </div>
       </div>
 
       {/* Cohort Growth Progression Stages */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-4">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
           <Sprout className="w-4 h-4 text-emerald-400" />
           Multi-Year Cohort Canopy Closure & Survival Progression
         </h3>
@@ -95,7 +95,7 @@ export const RestoreView: React.FC<RestoreViewProps> = ({ parcel }) => {
           {(data?.growth_stages || []).map((stg: any) => (
             <div key={stg.year} className="p-4 rounded-xl bg-slate-800/60 border border-slate-700 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-white">Year {stg.year}</span>
+                <span className="font-bold text-slate-50">Year {stg.year}</span>
                 <span className="text-emerald-400 font-semibold">{stg.survival_pct}% Survival</span>
               </div>
               <div className="text-sm font-extrabold text-slate-200">{stg.stage}</div>

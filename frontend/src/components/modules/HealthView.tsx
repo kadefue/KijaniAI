@@ -91,7 +91,7 @@ export const HealthView: React.FC<HealthViewProps> = ({ parcel }) => {
           <Calendar className="w-5 h-5 text-emerald-400" />
           <div>
             <div className="text-xs font-bold text-slate-300 uppercase">Tanzanian Agro-Climatic Calendar</div>
-            <div className="text-sm font-extrabold text-white">{data?.current_season}</div>
+            <div className="text-sm font-extrabold text-slate-50">{data?.current_season}</div>
           </div>
         </div>
         <span className="text-xs font-semibold text-emerald-300 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800">
@@ -101,7 +101,7 @@ export const HealthView: React.FC<HealthViewProps> = ({ parcel }) => {
 
       {/* Historical Phenological Curve */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-700 space-y-4">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <h3 className="text-sm font-bold text-slate-50 flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-emerald-400" />
           Seasonal Crop Vigor & Moisture Trajectory (Masika vs. Vuli Cycles)
         </h3>

@@ -57,7 +57,7 @@ export const LandCoverView: React.FC<LandCoverViewProps> = ({ parcel }) => {
             )}
             <span className="text-xs text-slate-400">Classification Accuracy: {data?.overall_accuracy_pct}%</span>
           </div>
-          <h2 className="text-xl font-black text-white mt-1">KijaniMap: AI Land Use & Land Cover Classification</h2>
+          <h2 className="text-xl font-black text-slate-50 mt-1">KijaniMap: AI Land Use & Land Cover Classification</h2>
         </div>
         <span className="text-xs font-bold text-slate-300 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700">
           5 Classes
@@ -71,7 +71,7 @@ export const LandCoverView: React.FC<LandCoverViewProps> = ({ parcel }) => {
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 rounded-md" style={{ backgroundColor: item.color }} />
               <div>
-                <div className="text-sm font-bold text-white">{item.name}</div>
+                <div className="text-sm font-bold text-slate-50">{item.name}</div>
                 <div className="text-xs text-slate-400">{item.hectares} hectares</div>
               </div>
             </div>
@@ -80,7 +80,7 @@ export const LandCoverView: React.FC<LandCoverViewProps> = ({ parcel }) => {
               <div className="w-48 bg-slate-800 h-2.5 rounded-full overflow-hidden hidden sm:block">
                 <div className="h-full rounded-full" style={{ width: `${item.percentage}%`, backgroundColor: item.color }} />
               </div>
-              <div className="text-sm font-black text-white w-14 text-right">{item.percentage}%</div>
+              <div className="text-sm font-black text-slate-50 w-14 text-right">{item.percentage}%</div>
             </div>
           </div>
         ))}
