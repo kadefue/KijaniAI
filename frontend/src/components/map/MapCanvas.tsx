@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
-import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders, Trees, X, CheckSquare, Square } from 'lucide-react';
+import { Layers, Split, Eye, EyeOff, ZoomIn, ZoomOut, Compass, Map, Globe, Sliders, Trees, X, CheckSquare, Square, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { Parcel } from '../../types';
 
 interface MapCanvasProps {
@@ -84,6 +84,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   const [showParcelBoundary, setShowParcelBoundary] = useState<boolean>(true);
   const [showCrowns, setShowCrowns] = useState<boolean>(true);
   const [showLayersPanel, setShowLayersPanel] = useState<boolean>(false);
+  // Collapses every floating control panel so the map itself is unobstructed
+  const [showControls, setShowControls] = useState<boolean>(true);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -512,7 +514,20 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       {/* MapLibre WebGL DOM Container */}
       <div ref={mapContainer} className="w-full h-full" />
 
+      {/* Collapsed state: a single pill to bring every map control back */}
+      {!showControls && (
+        <button
+          onClick={() => setShowControls(true)}
+          className="absolute top-4 left-4 z-10 flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl glass-panel border border-slate-700/80 bg-slate-900/90 text-slate-200 hover:bg-slate-800 shadow-xl backdrop-blur-md transition"
+          title="Show map controls"
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Controls</span>
+        </button>
+      )}
+
       {/* TOP CONTROL BAR: Analytic Layer & Base Map Selector */}
+      {showControls && (
       <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 max-w-[calc(100vw-5rem)]">
         {/* Row 1: Analytic Overlay Layers */}
         <div className="glass-panel rounded-xl p-1.5 flex flex-wrap items-center gap-1.5 shadow-xl border border-slate-700/80 bg-slate-900/90 backdrop-blur-md">
@@ -621,6 +636,15 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
           >
             <Layers className="w-3.5 h-3.5" />
             <span>Layers</span>
+          </button>
+
+          {/* Collapse every floating control for an unobstructed map view */}
+          <button
+            onClick={() => setShowControls(false)}
+            className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition"
+            title="Hide map controls"
+          >
+            <ChevronUp className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -749,8 +773,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
           ))}
         </div>
       </div>
+      )}
 
       {/* Floating Zoom & Orientation Controls */}
+      {showControls && (
       <div className="absolute top-4 right-4 z-10 flex flex-col gap-1.5">
         <button
           onClick={() => mapRef.current?.zoomIn()}
@@ -774,9 +800,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
           <Compass className="w-4 h-4 text-emerald-400" />
         </button>
       </div>
+      )}
 
       {/* Parcel Coordinate & Scale Legend Footer */}
-      {parcel && (
+      {showControls && parcel && (
         <div className="absolute bottom-4 left-4 z-10 glass-panel rounded-lg px-3 py-1.5 text-[11px] text-slate-300 flex items-center gap-3 border border-slate-700/80 bg-slate-900/90 backdrop-blur-md">
           <span className="font-bold text-slate-50">{parcel.name}</span>
           <span className="text-slate-400">•</span>
